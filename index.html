@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#123b5d"><link rel="manifest" href="manifest.json"><title>Water Chemistry Assistant</title><style>body{font-family:-apple-system,sans-serif;margin:0;background:#f5f7f9;color:#16232d}header{background:#123b5d;color:white;padding:25px 18px 16px}main{max-width:720px;margin:auto;padding:16px 16px 80px}.card{background:white;padding:16px;border-radius:16px;margin-bottom:14px;border:1px solid #e3e9ed}button,select,input{font:inherit;width:100%;padding:13px;margin:5px 0;border-radius:10px;box-sizing:border-box}button{border:0;background:#246a9a;color:white;font-weight:700}.secondary{background:#e9f1f6;color:#123b5d}.hidden{display:none}.dose{font-size:30px;font-weight:800;color:#123b5d}.muted{font-size:13px;color:#60717e}.ok{color:#247a43;font-weight:800}.bad{color:#b42318;font-weight:800}label{font-size:13px;font-weight:700;display:block;margin-top:10px}nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:white;border-top:1px solid #ddd;padding-bottom:env(safe-area-inset-bottom)}nav button{background:white;color:#123b5d;font-size:12px}.video{width:100%;border-radius:12px;background:#000;margin-top:10px}.logrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tabs{display:flex;gap:6px}.tabs button{font-size:13px}.entry{border-top:1px solid #dde5ea;padding:10px 0}textarea{font:inherit;width:100%;padding:12px;border:1px solid #bbb;border-radius:10px;box-sizing:border-box}
+.helpbtn{background:#e9f1f6;color:#123b5d;text-align:left;margin-top:10px}
+.modal{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.modalbox{background:white;width:min(720px,100%);border-radius:16px;padding:14px;max-height:90vh;overflow:auto}
+.modal.hidden{display:none}.modal video{width:100%;border-radius:12px;background:#000}
+.statusline{padding:10px;border-radius:10px;background:#f5f7f9;margin:8px 0}
+</style></head><body><header><h2>Water Chemistry Assistant</h2><div id="hdr"></div></header><main>
+<section id="home"><div class="card"><h3>Pool / System</h3><select id="pool"></select><button class="secondary" onclick="show('manage')">Manage pools & custom volumes</button></div><div class="card"><h3>What are you doing today?</h3><button onclick="fresh()">Fresh Fill / Refill</button><button onclick="routine()">Routine Water Test</button><button onclick="show('logs')">Daily & Weekly Logs</button><button onclick="show('videos')">Test Instruction Videos</button><button class="secondary" onclick="show('ref')">Chemistry Reference</button></div></section>
+<section id="manage" class="hidden"><div class="card"><h3>Add Custom Pool</h3><label>Pool name</label><input id="pn" placeholder="Jacksonville PT Pool"><label>Volume (gallons)</label><input id="pg" inputmode="decimal" placeholder="2250"><button onclick="addPool()">Save Pool</button></div><div class="card"><h3>Saved Pools</h3><div id="plist"></div></div></section>
+<section id="fresh" class="hidden"><div class="card"><h3>Fresh Fill / Refill</h3><b>Calcium → Alkalinity → pH → Bromine</b><p class="muted">Complete each step and retest before continuing.</p></div><div id="steps"></div></section>
+<section id="routine" class="hidden"><div class="card"><h3>Routine Water Test</h3><div id="routineForm"></div></div></section>
+<section id="logs" class="hidden">
+<div class="card"><h3>Water Chemistry Logs</h3><div class="tabs"><button onclick="renderDaily()">Daily Readings</button><button onclick="renderWeekly()">Weekly Readings</button></div></div>
+<div id="logForm"></div><div id="logEntries"></div>
+</section>
+<section id="videos" class="hidden">
+<div class="card"><h3>Test Instruction Videos</h3><p class="muted">Watch the test procedure before entering a reading.</p></div>
+<div class="card"><h3>Bromine Test</h3><video class="video" controls playsinline preload="metadata" src="videos/Bromine.mp4"></video></div>
+<div class="card"><h3>pH Test</h3><video class="video" controls playsinline preload="metadata" src="videos/PH.mp4"></video></div>
+<div class="card"><h3>Total Alkalinity Test</h3><video class="video" controls playsinline preload="metadata" src="videos/Alkalinity.mp4"></video></div>
+<div class="card"><h3>Calcium Hardness Test</h3><video class="video" controls playsinline preload="metadata" src="videos/Calcium.mp4"></video></div>
+</section>
+<section id="history" class="hidden">
+<div class="card"><h3>Water Test History</h3><div id="historyList"></div><button class="secondary" onclick="exportHistory()">Export History (CSV)</button><button class="secondary" onclick="clearHistory()">Clear History</button></div>
+</section>
+<section id="facilities" class="hidden">
+<div class="card"><h3>Facilities & Pools</h3><p class="muted">Group saved custom pools by customer or facility.</p>
+<label>Facility / Customer</label><input id="facilityName" placeholder="e.g. Jacksonville PT">
+<label>Pool name</label><input id="facilityPool" placeholder="e.g. Therapy Pool">
+<label>Volume (gallons)</label><input id="facilityGallons" inputmode="decimal" placeholder="2250">
+<button onclick="addFacilityPool()">Save Facility Pool</button></div><div class="card"><div id="facilityList"></div></div>
+</section>
+<section id="ref" class="hidden"><div class="card"><h3>Targets</h3><p>Calcium: <b>minimum 200 ppm</b><br>TA: <b>80–120 ppm</b><br>pH: <b>7.2–7.8</b><br>Bromine: <b>3–5 ppm</b></p></div><div class="card"><h3>pH</h3><p>Do not dose from pH alone. Low pH uses Taylor R-0006 base demand; high pH uses R-0005 acid demand. Use 1–5 drops; larger demand is corrected in stages and retested.</p></div><div class="card"><h3>Safety</h3><p>Make one adjustment at a time. Circulate and retest. Never mix chemicals. Follow the exact product label. Weight is preferred; volume is approximate.</p></div></section>
+</main><nav><button onclick="show('home')">Home</button><button onclick="fresh()">Fresh Fill</button><button onclick="show('history')">History</button><button onclick="show('logs')">Logs</button><button onclick="show('ref')">Reference</button></nav><div id="videoModal" class="modal hidden" onclick="closeVideo(event)">
+<div class="modalbox"><button class="secondary" onclick="closeVideo()">Close Video</button><h3 id="videoTitle"></h3><video id="helpVideo" controls playsinline preload="metadata"></video></div></div>
+<script src="app.js"></script></body></html>
