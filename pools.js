@@ -3,7 +3,7 @@ const sortedPools=rows=>[...rows].sort((a,b)=>a.n.localeCompare(b.n,'en',{numeri
 function render(){
  const rows=all();if(sid&&!rows.some(p=>p.id===sid)){sid='';localStorage.removeItem('sid')}
  $('pool').innerHTML=rows.length?`<option value="" ${sid?'':'selected'} disabled>Select a pool/system</option>`+rows.map(x=>`<option value="${esc(x.id)}" ${x.id===sid?'selected':''}>${esc(x.n)} — ${f(x.g)} GAL</option>`).join(''):'<option>No pools — add one in Manage Pools</option>';
- $('pool').disabled=!rows.length;$('hdr').textContent=cur()?`${cur().n} • ${f(cur().g)} GAL`:'NO POOLS — ADD A POOL TO BEGIN';
+ $('pool').disabled=!rows.length;$('hdr').textContent=sid&&cur()?`${cur().n} • ${f(cur().g)} GAL`:'';
  $('plist').innerHTML=C.length?sortedPools(C).map(x=>{const i=C.indexOf(x);return `<p><b>${esc(x.n)}</b> — ${f(x.g)} GAL${x.facility?'<br>'+esc(x.facility):''}<button class="secondary" onclick="editPool(${i})">Edit</button><button class="secondary" onclick="del(${i})">Delete</button></p>`}).join(''):'<p>No saved pools yet.</p>';
  $('standards').innerHTML=P.length?sortedPools(P).map(x=>{const i=P.indexOf(x);return `<p><b>${esc(x.n)}</b> — ${f(x.g)} GAL <button class="secondary" onclick="editTemplate(${i})" ${templatesUnlocked?'':'disabled'}>Edit Template</button><button class="secondary" onclick="deleteTemplate(${i})" ${templatesUnlocked?'':'disabled'}>Delete Template</button></p>`}).join(''):'<p>No standard templates. You can still add custom pools.</p>';
  $('templateStatus').textContent=templatesUnlocked?'Templates unlocked for this session.':'Templates locked.';
