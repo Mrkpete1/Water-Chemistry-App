@@ -1,4 +1,4 @@
-V5.3.1 validation - October 4, 2026
+V5.3.2 validation - October 4, 2026
 
 PASS: Headless Microsoft Edge, mobile viewport 390 x 844, app served at
 http://127.0.0.1:8765/Water-Chemistry-App/ (matching repository subpath).
@@ -82,3 +82,5 @@ V5.3 ADDITIONAL BROWSER CHECKS: PASS
 - Offline shock workflow after cache install; no browser JavaScript errors.
 - Mobile 390px layout screenshot inspected; no horizontal overflow.
 These checks verify software behavior and arithmetic, not physical water outcomes.
+
+V5.3.2 checks: fixed dichlor one-bag-per-10,000-GAL calculation; no label-dose fields; Fresh Fill shock requirement visible before startup; syntax and ZIP integrity.

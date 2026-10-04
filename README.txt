@@ -1,4 +1,4 @@
-Water Chemistry Assistant PWA V5.3.1
+Water Chemistry Assistant PWA V5.3.2
 
 DEPLOY
 Extract this ZIP and commit its contents at the root of the Water-Chemistry-App
@@ -130,3 +130,6 @@ Upload these extracted files to the repository root, replacing matching files,
 including index.html. Keep the existing videos folder and its MP4 files.
 Do not upload the ZIP itself. Reload the published app online after deployment.
 The release retains the existing pool, history and template-password storage.
+
+V5.3.2 CUSTOMER SHOCK PROCEDURE
+The customer-facing calculator uses dichlor shock at one bag per 10,000 gallons and calculates the proportional number of bags. Product-dose entry fields were removed. Fresh Fill prominently requires this initial chlorinated shock before the bromine feeder establishes its residual.
