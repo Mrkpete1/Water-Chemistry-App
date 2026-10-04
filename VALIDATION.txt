@@ -1,4 +1,4 @@
-V5.2 validation - October 4, 2026
+V5.3.1 validation - October 4, 2026
 
 PASS: Headless Microsoft Edge, mobile viewport 390 x 844, app served at
 http://127.0.0.1:8765/Water-Chemistry-App/ (matching repository subpath).
@@ -18,7 +18,7 @@ Validated:
   pH at or below 7.2 blocks the acid amount.
 - pH demand controls hidden in range, acid/base request appropriate out of range;
   switching direction resets old drops. In-range routine readings have no dose.
-- Fresh Fill gates Calcium, TA, pH, Bromine; later readings clear if an earlier
+- Fresh Fill gates Calcium, TA, pH, initial shock and final bromine/pH; later readings clear if an earlier
   reading no longer passes. Target boundaries produce no chemical dose.
 - Offline app and Logs reload after initial online cache installation.
 - Mobile screenshots inspected; no horizontal overflow at 390px.
@@ -47,7 +47,7 @@ Preserved Taylor acid demand lookup: [0,1.23,2.46,3.70,4.93,6.16].
 Not performed: live GitHub publication, real MP4 playback (files excluded),
 physical water testing, or product-label/production validation of TA or bromine dosing.
 The 30 ppm ceiling is operator-selected; final pH is not predicted.
-Chemical additions and cumulative daily limits are not tracked by this app.
+Shock additions can be recorded; cumulative daily chemical limits are not enforced.
 
 V5.2 ADDITIONAL BROWSER CHECKS: PASS
 - Alphabetical selector and saved/template lists, with natural numeric order.
@@ -62,3 +62,23 @@ V5.2 ADDITIONAL BROWSER CHECKS: PASS
 - Adding custom pools recovers from empty state; custom pools sort by name.
 - Full prior navigation, logs, pool CRUD, chemistry and offline suite passed.
 - No browser JavaScript errors; mobile template-management screenshot reviewed.
+
+V5.3 ADDITIONAL BROWSER CHECKS: PASS
+- Full navigation/logs/pool CRUD/chemistry/offline regression suite rerun.
+- Password/template CRUD/history/empty-state regression suite rerun.
+- Four shock types; weight versus liquid units; positive-amount/gallon guards.
+- RISE 375: label 1 oz/300 GAL scales to 1.25 oz; 2 oz/300 scales to 2.5 oz.
+- Arithmetic fixtures: 16 oz/12,500 GAL -> 0.48 oz; 2 oz/500 -> 1.5 oz;
+  10 fl oz/1,000 -> 3.75 fl oz. Fixtures are not product recommendations.
+- Scaling checked across all 13 system volumes.
+- Product profile save/reload; initial versus weekly separation; type changes
+  clear stale doses; pH and compatibility confirmations gate calculation.
+- V5.3.1 replaces the MPS startup option with chlorinated-only startup.
+  Weekly MPS still requires established-system compatibility confirmation.
+- Initial shock requires balanced water; final test remains gated until recorded.
+- Zero bromine and high final pH cannot pass startup. Earlier imbalance resets gates.
+- Recorded shock retains pool/name/volume, product, dose and label directions;
+  duplicate record click prevented; CSV includes shock fields.
+- Offline shock workflow after cache install; no browser JavaScript errors.
+- Mobile 390px layout screenshot inspected; no horizontal overflow.
+These checks verify software behavior and arithmetic, not physical water outcomes.

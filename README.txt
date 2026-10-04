@@ -1,11 +1,11 @@
-Water Chemistry Assistant PWA V5.2
+Water Chemistry Assistant PWA V5.3.1
 
 DEPLOY
 Extract this ZIP and commit its contents at the root of the Water-Chemistry-App
 repository. index.html must be at that root. Enable GitHub Pages for the branch
 and root folder. All app paths are relative and support /Water-Chemistry-App/.
 Use HTTPS or localhost; opening index.html as a file is not a supported PWA setup.
-After replacing V4, open online and reload once to load the new service worker.
+After replacing the previous version, open online and reload once to load the new service worker.
 V5 caches the app and complete Taylor PDF for subsequent offline use.
 
 VIDEOS
@@ -42,9 +42,9 @@ decrease caps. It is an operator-selected ceiling, not a validated safe dose.
 For TA decrease, require a current pH and suppress acid amounts at pH <=7.2.
 This guard does not predict final pH or prove dose safety. Product-label dosing
 and equipment limits still apply. THRIVE manual: no more than 1 lb decreaser
-per day. The app does not track chemical additions or enforce cumulative limits.
+per day. Only recorded shock additions are tracked; cumulative chemical limits are not enforced.
 TA weight conversion retains V4/Taylor coefficients: sodium bicarbonate 100%,
-dry acid 93.2%. Exact HTH/Natural Chemistry formulation must be checked; the
+dry acid 93.2%. The exact manufacturer formulation must be checked; the
 30 ppm prediction is approximate and is not a product-specific validation.
 pH correction uses HALF the V4 Taylor demand-table dose.
 ADD NOW includes all reductions and caps. Display precision is rounded down
@@ -55,7 +55,7 @@ Keep normal circulation running. Observe any longer label-required interval
 before retesting or adding more. HTH Pool Care Alkalinity Up specifies 6-8 hours.
 For TA adjustments, retest both TA and pH. The 45-minute sequence is not a
 universal authorization to redose.
-Fresh Fill gates Calcium -> TA -> pH -> Bromine. Changing an earlier step out
+Fresh Fill gates Calcium -> TA -> pH -> Initial Shock & Bromine Startup. Changing an earlier step out
 of range clears later readings so stale results cannot unlock a later step.
 
 RELEASE LIMITATION
@@ -69,7 +69,7 @@ Follow chemical labels; never mix chemicals. Weight preferred; volume approximat
 
 See VALIDATION.txt for validation coverage and representative RISE examples.
 
-V5.2 POOLS AND TEMPLATE MANAGEMENT
+POOLS AND TEMPLATE MANAGEMENT
 All pool selectors and management lists sort by name, case-insensitively,
 with natural numeric ordering (200, 300, 350, 750, 1200, etc.).
 Go to Home > Manage pools & custom volumes > Unlock Templates.
@@ -93,3 +93,40 @@ they do not modify the GitHub repository or sync to other users. Browser data
 clearing removes local edits and logs. Keep CSV backups. No password needs to
 be created on first use. To change the fixed password, build a new verifier
 and redeploy; do not place plaintext credentials in the app or this README.
+
+V5.3 SHOCK WORKFLOWS
+Home > Weekly / As-needed Shock, or Weekly Logs > shock calculator.
+Fresh Fill leads to Initial Shock after Calcium, TA and pH pass their gates.
+Weekly maintenance offers MPS, calcium hypochlorite, dichlor or liquid sodium
+hypochlorite. Fresh Fill offers only the three chlorinated types.
+Lithium shock is not offered. Choose one compatible product per treatment.
+Enter its exact label amount, unit, treated gallons, timing and re-entry
+conditions. Save Product Setup to reuse it. Initial and weekly profiles are
+separate because their treatment rates may differ. Profiles stay in this browser.
+The calculator scales label amount x pool gallons / label gallons. No universal
+brand-average shock dose is assumed. Solid products use weight; liquid products
+use liquid volume. No generic spoon-volume conversion or half-dose rule applies.
+Changing product type clears the previous amount to prevent accidental reuse.
+Record only an actual addition; it is linked to the selected pool in History and
+included in history CSV export. Recording a dose is not permission to reopen.
+
+Fresh Fill uses compatible chlorinated shock for initial sanitation while the
+bromine feeder establishes its residual. Maintain and test the chlorine residual
+according to the product label during this transition. A bromide starter is not
+mandatory in this workflow; use one if the system instructions require it.
+MPS alone does not sanitize fresh water. Older MPS startup profiles are blocked.
+Final bromine checks confirm established-system startup completion; they do not
+assess interim chlorine sanitation. Follow kit guidance for mixed sanitizers.
+After recording initial shock, Fresh Fill requests bromine 3-5 ppm (aim 4),
+pH 7.2-7.8, and confirmation that label wait/re-entry conditions are met.
+The app retains RUN JETS 15 MINUTES -> WAIT ANOTHER 30 MINUTES -> RETEST.
+Keep normal circulation running; longer label requirements take precedence.
+Chemistry Reference includes manufacturer examples and linked research sources.
+The 30 ppm TA ceiling is an operating choice, not a universal industry maximum.
+Existing V4 TA/pH/bromine formulations are not validated for every manufacturer.
+
+UPGRADING
+Upload these extracted files to the repository root, replacing matching files,
+including index.html. Keep the existing videos folder and its MP4 files.
+Do not upload the ZIP itself. Reload the published app online after deployment.
+The release retains the existing pool, history and template-password storage.
