@@ -1,7 +1,8 @@
-const P=[["XLR8",150],["200",500],["300",800],["350",1000],["ECO / EVO",440],["RISE",375],["THRIVE",250],["Plunge 14'",1500],['Plunge 7\'9"',800],["750",2800],["1200",3000],["2000",5000],["3500",5500]].map(([n,g])=>({id:"p"+n,n,g,p:1}));
+const DEFAULT_P=[["XLR8",150],["200",500],["300",800],["350",1000],["ECO / EVO",440],["RISE",375],["THRIVE",250],["Plunge 14'",1500],['Plunge 7\'9"',800],["750",2800],["1200",3000],["2000",5000],["3500",5500]].map(([n,g])=>({id:"p"+n,n,g,p:1}));
+let P=localStorage.getItem('standardPoolsV52')===null?DEFAULT_P.map(x=>({...x})):readStore('standardPoolsV52');
 let C=readStore("pools").map(x=>({...x,n:String(x.n).toUpperCase(),facility:String(x.facility||'').toUpperCase()})),sid=localStorage.getItem("sid")||"pRISE"; P.forEach(x=>x.n=x.n.toUpperCase());
 const den={ca:.471,bi:.626,acid:.745,soda:.547,spa:.65,hth:.66},soda=[0,.51,1.03,1.54,2.05,2.56],acid=[0,1.23,2.46,3.70,4.93,6.16];
-const all=()=>[...P,...C],cur=()=>all().find(x=>x.id===sid)||P[5],f=(x,d=2)=>Number(x).toLocaleString(undefined,{maximumFractionDigits:d});
+const all=()=>sortedPools([...P,...C]),cur=()=>all().find(x=>x.id===sid)||all()[0]||null,f=(x,d=2)=>Number(x).toLocaleString(undefined,{maximumFractionDigits:d});
 function doseNumber(n){return f(Math.floor((n+1e-10)*1000)/1000,3)}
 function wt(oz){if(oz>0&&oz<.001)return '<0.001 oz — use a suitable precision scale';if(oz>=16){let l=Math.floor(oz/16);return `${l} lb ${doseNumber(oz-l*16)} oz`}return `${doseNumber(oz)} oz`}
 function vol(oz,d){let c=(oz/16)/d;if(c>=.5)return `≈ ${doseNumber(c)} cups`;let t=c*16;if(t>=1)return `≈ ${doseNumber(t)} tbsp`;return `≈ ${doseNumber(c*48)} tsp`}

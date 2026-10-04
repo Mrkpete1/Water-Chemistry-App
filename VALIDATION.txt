@@ -1,4 +1,4 @@
-V5 validation - October 4, 2026
+V5.2 validation - October 4, 2026
 
 PASS: Headless Microsoft Edge, mobile viewport 390 x 844, app served at
 http://127.0.0.1:8765/Water-Chemistry-App/ (matching repository subpath).
@@ -14,6 +14,8 @@ Validated:
 - V4 legacy record migrates to matching pool using name and gallon volume.
 - Historical snapshots survive pool rename; zero bromine is retained in CSV.
 - User-entered HTML is escaped in log rendering.
+- Current pH required before TA-decrease display in Routine and Fresh Fill;
+  pH at or below 7.2 blocks the acid amount.
 - pH demand controls hidden in range, acid/base request appropriate out of range;
   switching direction resets old drops. In-range routine readings have no dose.
 - Fresh Fill gates Calcium, TA, pH, Bromine; later readings clear if an earlier
@@ -23,10 +25,14 @@ Validated:
 
 RISE 375-GALLON CALCULATION CHECKS (using preserved V4 inputs):
 CH 100 -> target minimum 200: 7.2 oz calcium chloride 77%.
-TA 40 -> target 90: uncapped 4.2 oz; cap 2.3475 oz (3.75 tbsp).
-  ADD NOW displays 2.347 oz, approximate volume 3.75 tbsp.
-TA 200 -> target 110: half-calculated 5.805 oz dry acid.
-TA 400 -> target 110: half-calculated 18.705 oz; ADD NOW capped at 16 oz.
+TA 40 -> target 90: 50 ppm full correction; cap at 30 ppm = 2.52 oz.
+TA 70 -> target 90: 20 ppm correction = 1.68 oz; cap not reached.
+TA 150 -> target 110: half of 40 ppm = 20 ppm = 2.58 oz dry acid.
+TA 200 -> target 110: half of 90 ppm = 45 ppm; cap at 30 ppm = 3.87 oz.
+TA 400 -> target 110: half of 290 ppm = 145 ppm; cap at 30 ppm = 3.87 oz.
+TA-decrease tests use current pH 7.8; missing pH or pH <=7.2 suppresses dose.
+All 13 standard volumes tested for a maximum calculated 30 ppm TA change
+in either direction. These checks validate implementation, not product safety.
 pH 7.0, base demand 2 drops: half-calculated 0.193125 oz soda ash.
 pH 8.0, acid demand 2 drops: half-calculated 0.46125 oz dry acid.
 Bromine 0, SpaGuard: preserved V4 calculation 0.3336 oz.
@@ -39,4 +45,20 @@ Preserved Taylor base demand lookup: [0,.51,1.03,1.54,2.05,2.56].
 Preserved Taylor acid demand lookup: [0,1.23,2.46,3.70,4.93,6.16].
 
 Not performed: live GitHub publication, real MP4 playback (files excluded),
-physical water testing, or bromine product-label/production validation.
+physical water testing, or product-label/production validation of TA or bromine dosing.
+The 30 ppm ceiling is operator-selected; final pH is not predicted.
+Chemical additions and cumulative daily limits are not tracked by this app.
+
+V5.2 ADDITIONAL BROWSER CHECKS: PASS
+- Alphabetical selector and saved/template lists, with natural numeric order.
+- Masked password entry, incorrect-password rejection, correct-password unlock.
+- Locked template buttons and action functions reject edit/delete attempts.
+- Manual lock and reload lock; locking cancels an active template edit.
+- Template name/volume edit, invalid-volume rejection, deletion confirmation
+  accept/cancel, and persistence after reload.
+- Template stable ID survives edits; original record name/volume preserved.
+- Deleted template history remains visible in All pools history after reload.
+- Deleting all templates does not resurrect defaults or break navigation.
+- Adding custom pools recovers from empty state; custom pools sort by name.
+- Full prior navigation, logs, pool CRUD, chemistry and offline suite passed.
+- No browser JavaScript errors; mobile template-management screenshot reviewed.
