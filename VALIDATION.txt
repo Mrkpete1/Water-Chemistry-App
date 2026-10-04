@@ -1,0 +1,42 @@
+V5 validation - October 4, 2026
+
+PASS: Headless Microsoft Edge, mobile viewport 390 x 844, app served at
+http://127.0.0.1:8765/Water-Chemistry-App/ (matching repository subpath).
+No JavaScript page errors during the test suite.
+
+Validated:
+- Exactly one visible section when navigating Home, Logs, History,
+  Reference, Videos and Manage Pools; Fresh Fill and Routine also exercised.
+- Daily and weekly forms render, save, survive reload and filter by pool.
+- Add/edit/delete saved pools; confirmation shown on delete; stable IDs
+  survive rename; deleted pool records remain in All pools history after reload.
+- Standard system list contains all 13 required volumes; names uppercase.
+- V4 legacy record migrates to matching pool using name and gallon volume.
+- Historical snapshots survive pool rename; zero bromine is retained in CSV.
+- User-entered HTML is escaped in log rendering.
+- pH demand controls hidden in range, acid/base request appropriate out of range;
+  switching direction resets old drops. In-range routine readings have no dose.
+- Fresh Fill gates Calcium, TA, pH, Bromine; later readings clear if an earlier
+  reading no longer passes. Target boundaries produce no chemical dose.
+- Offline app and Logs reload after initial online cache installation.
+- Mobile screenshots inspected; no horizontal overflow at 390px.
+
+RISE 375-GALLON CALCULATION CHECKS (using preserved V4 inputs):
+CH 100 -> target minimum 200: 7.2 oz calcium chloride 77%.
+TA 40 -> target 90: uncapped 4.2 oz; cap 2.3475 oz (3.75 tbsp).
+  ADD NOW displays 2.347 oz, approximate volume 3.75 tbsp.
+TA 200 -> target 110: half-calculated 5.805 oz dry acid.
+TA 400 -> target 110: half-calculated 18.705 oz; ADD NOW capped at 16 oz.
+pH 7.0, base demand 2 drops: half-calculated 0.193125 oz soda ash.
+pH 8.0, acid demand 2 drops: half-calculated 0.46125 oz dry acid.
+Bromine 0, SpaGuard: preserved V4 calculation 0.3336 oz.
+  This is formula regression validation, NOT product-label/field validation.
+Weight display rounds down to 0.001 oz; calculations keep full precision.
+
+Preserved V4 densities (lb/cup): calcium .471, bicarbonate .626,
+dry acid .745, soda ash .547, SpaGuard .65, HTH .66.
+Preserved Taylor base demand lookup: [0,.51,1.03,1.54,2.05,2.56].
+Preserved Taylor acid demand lookup: [0,1.23,2.46,3.70,4.93,6.16].
+
+Not performed: live GitHub publication, real MP4 playback (files excluded),
+physical water testing, or bromine product-label/production validation.
