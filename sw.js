@@ -1,4 +1,4 @@
-const CACHE='chem-v5.3.4-marks-title-'+self.registration.scope;
+const CACHE='chem-v5.3.4-contact-buttons-'+self.registration.scope;
 const FILES=['./','./index.html','./storage.js','./chemistry.js','./app.js','./shock.js','./contact.js','./pools.js','./template-auth.js','./manifest.json','./icon.svg','./Taylor-Troubleshooting.pdf'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k==='chem-v4'||(k.startsWith('chem-v5')&&k.endsWith(self.registration.scope)&&k!==CACHE)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
