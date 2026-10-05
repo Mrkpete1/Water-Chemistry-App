@@ -39,4 +39,14 @@ $('makeSetupLink').onclick=()=>{if(!templatesUnlocked)return;const facility=$('s
 $('saveOldCustomerLink').onclick=()=>{if(!templatesUnlocked)return;try{const s=decodeCustomerSetup(new URL($('importCustomerLink').value).hash);if(!s)throw Error();const setup=s.v===2?s:{...s,v:2,id:crypto.randomUUID(),rev:1,legacy:keyLegacy(s)};if(customerRecords.some(r=>r.setup.id===setup.id||setup.legacy&&r.setup.legacy===setup.legacy))return notify('This link is already saved.');const next=[...customerRecords,{setup,updated:new Date().toISOString()}];persist('customerLinksV536',next);customerRecords=next;renderCustomerRecords();notify('Existing link saved.')}catch(e){notify('Enter a valid customer setup link.')}};
 $('exportCustomerRecords').onclick=()=>{if(!templatesUnlocked)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({version:1,customers:customerRecords},null,2)],{type:'application/json'}));a.download='customer-links-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 $('restoreCustomerRecords').onchange=async e=>{if(!templatesUnlocked)return;try{const file=e.target.files[0];if(!file||file.size>2000000)throw Error();const data=JSON.parse(await file.text());if(!templatesUnlocked)return;if(data.version!==1||!Array.isArray(data.customers)||data.customers.length>1000)throw Error();const incoming=data.customers.map(r=>{const setup=decodeCustomerSetup('#'+new URLSearchParams({setup:JSON.stringify(r.setup)}));if(!setup||setup.v!==2)throw Error();return {setup,updated:String(r.updated||'Restored').slice(0,100)}});const next=[...customerRecords];for(const r of incoming){const i=next.findIndex(x=>x.setup.id===r.setup.id);if(i<0)next.push(r);else if(r.setup.rev>next[i].setup.rev)next[i]=r}persist('customerLinksV536',next);customerRecords=next;renderCustomerRecords();notify('Backup restored.')}catch(e){notify('Could not restore backup. Existing records kept.')}e.target.value=''};
-applyCustomerSetup();renderSetupTool();window.addEventListener('hashchange',applyCustomerSetup);
+const facilityCard=document.createElement('div');
+facilityCard.id='facilityCard';facilityCard.className='card hidden';
+facilityCard.innerHTML='<p class="muted">FACILITY</p><h2 id="facilityName" style="overflow-wrap:anywhere;margin:0"></h2>';
+$('home').prepend(facilityCard);
+function renderFacilityName(){
+ let name='';try{const setup=JSON.parse(localStorage.getItem('customerSetupV535')||'null');if(typeof setup?.facility==='string')name=setup.facility.trim()}catch(e){}
+ $('facilityName').textContent=name;facilityCard.classList.toggle('hidden',!name);
+}
+const renderBeforeFacility=render;render=function(){renderBeforeFacility();renderFacilityName()};
+window.addEventListener('storage',e=>{if(e.key==='customerSetupV535'||e.key===null)renderFacilityName()});
+applyCustomerSetup();renderSetupTool();renderFacilityName();window.addEventListener('hashchange',applyCustomerSetup);
