@@ -1,6 +1,6 @@
 function contactMarkURL(){
  const pool=cur();
- const body=['Hi Mark,','','I need help with:','','','Pool / System: '+(pool?pool.n:'Not selected'),'Volume: '+(pool?pool.g+' gallons':'Not selected'),'App version: V5.3.5','','My readings / question:',''].join('\r\n');
+ const body=['Hi Mark,','','I need help with:','','','Pool / System: '+(pool?pool.n:'Not selected'),'Volume: '+(pool?pool.g+' gallons':'Not selected'),'App version: V5.3.6','','My readings / question:',''].join('\r\n');
  return 'mailto:mpeterson@hydroworx.com?subject='+encodeURIComponent('Water chemistry help')+'&body='+encodeURIComponent(body);
 }
 const contactCard=document.createElement('div');

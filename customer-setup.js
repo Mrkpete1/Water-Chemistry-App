@@ -40,5 +40,5 @@ $('makeSetupLink').onclick=()=>{
  $('setupLink').value=url.href;$('setupOutput').classList.remove('hidden');
 };
 $('copySetupLink').onclick=async()=>{if(!templatesUnlocked)return;try{await navigator.clipboard.writeText($('setupLink').value);notify('Customer link copied.')}catch(e){$('setupLink').focus();$('setupLink').select();notify('Select and copy the customer link.')}};
-applyCustomerSetup();renderSetupTool();
+renderSetupTool();
 window.addEventListener('hashchange',applyCustomerSetup);

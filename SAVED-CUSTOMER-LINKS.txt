@@ -1,0 +1,29 @@
+SAVED CUSTOMER LINKS — V5.3.6
+
+In Manage pools & custom volumes, unlock the setup tool using the existing
+owner password. Enter a customer name and choose their systems, then select
+Create and Save Link. The record appears in Saved Customer Links.
+
+Choose Add Pools / Edit Link to add more systems. Existing selections are
+retained. Save Updated Link and send the resulting link to the customer.
+Old links do not change automatically. Customers must open the updated link.
+Updates add only new name/volume pairs. Existing pools, edits, deleted pools,
+custom pools and history are retained. This is not a remote editing tool.
+Changing or removing existing customer pools must be done on their device.
+
+Show / Copy Link retrieves a saved link. Records are stored only in your current
+browser on this device. Export Links Backup downloads a JSON backup; Restore
+links backup merges it back, retaining newer revisions already saved.
+
+Links created before this feature are not automatically recoverable here.
+Paste a previously shared link into Save Existing Link to register it, then
+edit the saved record and share its updated link. The original customer's
+matching V5.3.5 configuration can accept those additions.
+
+Create links from your published website so customers receive the public URL.
+Deploy all extracted files, including customer-records.js, customer-setup.js,
+index.html and sw.js. Keep existing MP4 videos. No password or logs are in links.
+
+Browser validation passed: saved records survive reload, add-pool revision,
+repeat/older link replay, edited pools/history retained, deletion not reversed,
+fresh-device setup, backup restore deduplication, locked owner controls.
