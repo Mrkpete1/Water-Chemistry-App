@@ -1,0 +1,21 @@
+V5.3.8 — MAINTENANCE GUIDANCE
+Access Bromine Feeder & Filter Care from Home, Reference, or Weekly Logs.
+Includes weekly average tablet replenishment, monthly average cartridge care,
+8–10 PSI increase over a clean baseline, two plumbing arrangements, and air relief.
+Schedules and plumbing groups supplied by Mark Peterson.
+
+Safety adaptations: lid access requires pressure release; lids/clamps must be
+secured before restart. The user's open-lid/open-dial flooding sequence was not
+published as a universal procedure. Pentair 320 instructions refit the cap before
+reopening the control. Filter relief-valve position at startup follows the model
+manual; many Pentair models specify open before starting, not afterward.
+
+Sources reviewed October 5, 2026:
+https://www.pentair.com/content/dam/extranet/nam/pentair-pool/pool-manuals/rainbow/chlorinebromine-feeder-320-installation-guide-english.pdf
+https://www.pentair.com/en-us/pool-spa/education-support/homeowner-support/pool-filter-product-safety-help-center.html
+https://www.pentair.com/en-us/pool-spa/education-support/homeowner-support/pool-filter-product-safety-help-center/fns-plus-product-support.html
+
+Browser checks passed: navigation from Home, Reference and Weekly Logs;
+both procedure panels; required maintenance text; no mobile horizontal overflow;
+contact links retained; no JavaScript page errors. No physical equipment testing.
+Maintenance text is included in the offline cache. No video files in this ZIP.
