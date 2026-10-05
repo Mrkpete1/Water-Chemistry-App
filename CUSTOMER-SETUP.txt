@@ -1,0 +1,25 @@
+CUSTOMER SETUP LINKS — V5.3.5
+
+Deploy the extracted app files to the existing repository root. Keep videos.
+Open the published site, then Manage pools & custom volumes.
+Unlock Setup Tool with the existing template-management password.
+Enter the facility name, check the customer's systems, and click Create Link.
+Copy Link and share it with the customer. Create links on the published site,
+not a local preview, so the resulting address works for customers.
+
+On an unconfigured browser, only the selected standard presets are installed.
+Existing custom pools and logs are retained. The selection starts blank.
+Returning through the link does not overwrite edits, deleted presets or logs.
+A browser with previously customized standard presets keeps its configuration;
+use a separate browser profile or device for another customer.
+
+The link contains facility/preset data only, not credentials or water records.
+Anyone with the link can read or alter its setup data. This is a convenience
+feature, not a private account or secure access restriction. The password guards
+the normal owner interface; local browser JavaScript can bypass that guard.
+Records remain local to the customer's browser/device and do not sync.
+App updates still use the same published site for all customers.
+
+Verified in Edge: generated links, selected presets, blank selection,
+repeat visits, retained edits/custom pools/history, invalid links,
+existing configuration protection, and owner lock/unlock visibility.
