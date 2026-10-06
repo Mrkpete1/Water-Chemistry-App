@@ -5,7 +5,7 @@ function decodeCustomerSetup(hash){
  if(raw.length>16000)throw Error('Setup link is too long.');
  const data=JSON.parse(raw);
  if(data.v!==1||typeof data.facility!=='string'||data.facility.length>120||!Array.isArray(data.pools)||!data.pools.length||data.pools.length>30)throw Error('Invalid customer setup.');
- const pools=data.pools.map(p=>{if(typeof p.n!=='string'||!p.n.trim()||p.n.length>120||!Number.isFinite(p.g)||p.g<=0||p.g>10000000)throw Error('Invalid pool in setup link.');return {n:p.n.trim().toUpperCase(),g:p.g}});
+ const pools=data.pools.map(p=>{if(typeof p.n!=='string'||!p.n.trim()||p.n.length>120||!Number.isFinite(p.g)||p.g<=0||p.g>10000000)throw Error('Invalid pool in setup link.');return {n:p.n.trim().toUpperCase(),g:p.g,...(p.r?{r:validatePoolResources(p.r)}:{})}});
  return {facility:data.facility.trim().toUpperCase(),pools};
 }
 function applyCustomerSetup(){

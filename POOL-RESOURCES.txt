@@ -1,0 +1,31 @@
+MARK’S WATER CHEMISTRY ASSISTANT V5.4.3 — FACILITY RESOURCES
+
+1. Open Manage pools & custom volumes and unlock the setup tool.
+2. Create a customer or choose Add Pools / Edit Link on a saved customer.
+3. Select the customer’s pools. Under Pool Manuals & Tips, expand each pool.
+4. Add up to five document links per pool, one per line:
+   Owner’s Manual | https://your-document-link
+5. Add tips and non-sensitive operating notes, then Create and Save Link
+   or Save Updated Link. Send the resulting link to the customer.
+6. Customers open that link and select a pool to see Your Pool Resources.
+
+Use a link to the appropriate document, or a customer-specific folder containing
+only their documents. The supplied shared Egnyte folder was not inspected or
+added automatically. No manual PDFs or operating codes have been added.
+
+These setup links contain the resources and notes. Anyone with the link can
+read them. Use document-host access controls for private documents; sensitive
+credentials require an authenticated customer portal and are not supported here.
+The template password only controls the owner interface in this browser.
+
+To change resources, edit the saved customer record and send its revised link.
+An old link does not receive resource edits automatically. The app itself can
+still receive deployed updates. Existing pool IDs and logs are retained.
+Export Links Backup includes resources; keep backups of your saved links.
+Resources appear only when the configured facility’s pool is selected.
+Document links open online and are not downloaded or cached by the app.
+
+DEPLOYMENT
+Upload all files in this ZIP to the existing repository root, including index.html,
+new JavaScript files, manifest.json and sw.js. Keep existing videos in videos/.
+Large videos are excluded. Reload online after deployment to obtain V5.4.3.

@@ -1,0 +1,15 @@
+V5.4.3 validation: PASS
+Browser checks using Microsoft Edge at /Water-Chemistry-App/:
+- Create facility setup with manual, tips, and operating notes.
+- Hide resources before facility/pool selection.
+- Show correct manual link after selecting facility pool.
+- Reject non-HTTPS document links without saving a new revision.
+- Render HTML-like notes as text.
+- Edit resource link revision and retain pool ID and history.
+- Retain resource mapping after local pool rename.
+- Reload retains resources and customer-only pool catalog.
+- Saved customer record reload retains notes.
+- Logs navigation and phone-width layout.
+- No JavaScript page errors.
+Manual destinations were not opened or verified. No production manuals or codes supplied.
+Earlier validation files describe checks of previous versions.
