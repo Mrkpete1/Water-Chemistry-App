@@ -1,0 +1,14 @@
+V5.4.4 checks: PASS
+Reviewed rendered source pages for filter service, feeder settings, stainless care,
+and maintenance schedule. Checked browser behavior under /Water-Chemistry-App/.
+- New customer setup assigns 350 profile and preserves it in saved link.
+- 350 schedule appears only for applicable selected facility pool.
+- THRIVE receives no 350 maintenance schedule.
+- Daily/Weekly Logs buttons open correct forms.
+- Model uses isolation valves and no RISE equalization.
+- No lithium shock in model instructions.
+- Feeder one-third capacity and initial 1.5 setting labeled model-specific.
+- Reload retains facility pools and resources.
+- HTTPS links, notes escaping, resource revisions and history retention pass.
+- Phone layout checked in Edge at 390 pixels; no horizontal overflow.
+- No JavaScript page errors.

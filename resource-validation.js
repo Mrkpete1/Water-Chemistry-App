@@ -9,3 +9,5 @@ function validatePoolResources(r){
  if(typeof r.tips!=='string'||r.tips.length>1500||typeof r.notes!=='string'||r.notes.length>300)throw Error('Resource notes are too long.');
  return {manuals,tips:r.tips.trim(),notes:r.notes.trim()};
 }
+
+function validateMaintenanceProfile(m){if(!["none","hw350-revb"].includes(m))throw Error("Invalid maintenance profile.");return m}

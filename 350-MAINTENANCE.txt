@@ -1,0 +1,39 @@
+V5.4.4 - HYDROWORX 350 MAINTENANCE
+
+Source: HydroWorx 350 User Guide and Owner Manual Rev B, September 2, 2021.
+Summary uses PDF pages 30, 31, 34, 35, 36 and 38-40.
+The original PDF is not included in this public app package.
+
+CREATE OR EDIT A CUSTOMER LINK
+Select the facility pools, expand Pool Manuals & Tips for its 350, and select
+HYDROWORX 350 - OWNER MANUAL REV B (2021) in the maintenance profile field.
+New 350 selections default to this profile. It can also be assigned to a custom
+pool name when that pool is a 350. Do not assign it to another model.
+Save and send the updated facility link. Existing history stays on the device.
+For older links lacking profiles, an exact 350 model name selects this schedule.
+Customers select their pool and open 350 Maintenance Schedule & Instructions
+from Your Pool Resources.
+
+SCHEDULE
+Daily: bromine and pH tests.
+Weekly: tablet supply, shock, TA and calcium tests, stainless steel cleaning.
+Monthly: main GFCI test and filter cartridge cleaning/replacement.
+Every four months or sooner as use requires: drain and clean.
+
+MODEL-SPECIFIC PROCEDURES
+350 filter service uses isolation valves; no RISE water equalization.
+Includes pump strainer basket checks, filter air bleeding, feeder settings,
+drain/refill and stainless steel care with section/page references.
+Pump basket inspection has no fixed interval specified in the manual.
+The manual's filter pressure range is identified as configuration-specific.
+Manual chemistry order and lithium shock have not replaced the user's current
+app chemistry sequence or chlorine/non-chlorine shock choices.
+
+The schedule is a checklist reference, not a due-date tracker or service log.
+Manual links and customer tips remain available; sensitive credentials do not
+belong in shareable setup links. Restricted manuals should use host access controls.
+
+DEPLOY
+Replace repository files with all extracted ZIP contents, including index.html,
+new model-maintenance.js, updated resource files, manifest.json and sw.js.
+Keep existing videos. Reload online to load V5.4.4.
