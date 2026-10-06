@@ -1,0 +1,15 @@
+V5.4.5 - STAINLESS STEEL CARE & CLEANING
+
+A button on Home opens shared stainless care instructions for all pools.
+It is available before selecting a pool and in customer facility setups.
+A Reference shortcut and a 350 maintenance shortcut also open this page.
+Includes weekly cleaning, fresh-water rinsing, non-abrasive tools, products to
+avoid, and sanitizer placement away from stainless steel.
+
+Upload all extracted files, replacing matching repository files including
+index.html, sw.js and manifest.json. Include the new stainless-care.js file.
+Keep existing videos. Reload online after deploying V5.4.5.
+Existing facility links do not need to be recreated for this shared button.
+
+Validation: browser navigation from Home before and after RISE selection,
+Reference shortcut, return to Home and mobile layout passed; no page errors.

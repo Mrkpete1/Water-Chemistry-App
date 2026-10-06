@@ -1,0 +1,13 @@
+// Shared care guidance for exposed stainless steel on any pool/system.
+const stainlessCareSection=document.createElement('section');
+stainlessCareSection.id='stainlessCare';stainlessCareSection.className='hidden';
+stainlessCareSection.innerHTML=`<div class="card"><h2>Stainless Steel Care & Cleaning</h2><p>For exposed stainless steel on all pools and systems, including handrails, support bars and stainless trim.</p><p><b>Clean at least weekly.</b> Rinse more frequently if you see water stains, discoloration or chemical buildup.</p></div>
+<div class="card"><h3>How to Clean</h3><ol><li>Use a cleaner suitable for stainless steel and follow its directions. Choose a product compatible with the surface and nearby pool materials.</li><li>Clean gently with a soft, non-abrasive cloth or sponge.</li><li>Rinse away cleaner and chemical residue with fresh water.</li><li>Check for stains or discoloration. Increase fresh-water rinsing if buildup returns.</li></ol><p>Keep cleaning products out of the pool water and follow the installed equipment instructions for controls and electrical components.</p></div>
+<div class="card"><h3>Products & Tools to Avoid</h3><ul><li>Steel wool and sandpaper.</li><li>Mineral acids.</li><li>Bleach and chlorine-based cleaning products on stainless steel.</li></ul><p>These can damage the protective surface. Use non-abrasive tools and a suitable stainless steel cleaner.</p></div>
+<div class="card"><h3>When Adding Pool Chemicals</h3><p>Add sanitizer away from stainless steel surfaces. Do not place chemicals directly on stainless steel or allow concentrated sanitizer to sit against it.</p><p>Heat, humidity and sanitizer residue can contribute to corrosion. Regular cleaning and fresh-water rinsing help protect the surface.</p></div>
+<div class="card"><p class="muted">Care guidance summarized from HydroWorx 350 Owner Manual Rev B (September 2, 2021), section 3.12.1. Follow any additional instructions for your pool’s finishes and installed equipment.</p><button class="secondary" onclick="show('home')">Back to Home</button></div>`;
+document.querySelector('main').appendChild(stainlessCareSection);
+function stainlessCareButton(){const button=document.createElement('button');button.className='secondary';button.textContent='Stainless Steel Care & Cleaning';button.onclick=()=>show('stainlessCare');return button}
+const homeActions=$('home').querySelector('button[onclick="show(\'ref\')"]')?.parentElement;
+(homeActions||$('home')).appendChild(stainlessCareButton());
+const stainlessReference=document.createElement('div');stainlessReference.className='card';stainlessReference.appendChild(stainlessCareButton());$('ref').appendChild(stainlessReference);
