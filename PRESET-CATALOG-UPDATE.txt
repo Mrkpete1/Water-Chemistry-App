@@ -1,0 +1,21 @@
+V5.4.0 PRESET CATALOG
+22 presets grouped as ACRYLIC, FABRICATED and FREESTANDING POOLS.
+Owner-supplied volumes include 3500 at 5554 gallons, 3500 +4' EXT & DEEP
+WELL at 7500 gallons, and +8' at 9000 gallons. XLR8 remains 150 gallons.
+ACRYLIC and REJUVENATE sizes have distinct names to avoid duplicate 14' entries.
+
+Existing IDs are retained for matching systems. Untouched older template
+volumes/names are updated once; customized templates are preserved.
+Previously deleted IDs stay deleted. Empty catalogs remain empty.
+Legacy presets already saved on a device may remain under OTHER / SAVED POOLS;
+the owner can retire these with the password-protected delete action.
+History retains the recorded name and gallon volume.
+Customer-specific setups do not receive the full catalog automatically.
+Use an updated customer link to add systems to a customer's configuration.
+
+Owner edits/deletions still apply to the current browser, not the repository
+or other devices. Deploying another catalog release is needed for global changes.
+
+Browser checks: 22 default presets; three groups; volumes; migration preserving
+history/customized volumes/deleted templates; new-preset deletion persistence;
+customer-specific catalog isolation; contact and logs navigation; no page errors.

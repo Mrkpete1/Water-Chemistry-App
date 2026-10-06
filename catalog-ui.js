@@ -1,0 +1,6 @@
+const CATALOG_GROUPS=['ACRYLIC POOLS','FABRICATED POOLS','FREESTANDING POOLS'];
+function presetGroup(p){return p.group||DEFAULT_P.find(x=>x.n===p.n&&x.g===p.g)?.group||'OTHER / SAVED POOLS'}
+function groupedPoolOptions(rows){return [...CATALOG_GROUPS,'OTHER / SAVED POOLS'].map(group=>{const items=sortedPools(rows.filter(p=>presetGroup(p)===group));return items.length?'<optgroup label="'+esc(group)+'">'+items.map(p=>'<option value="'+esc(p.id)+'" '+(p.id===sid?'selected':'')+'>'+esc(p.n)+' — '+f(p.g)+' GAL</option>').join('')+'</optgroup>':''}).join('')}
+const renderBeforeCatalog=render;render=function(){renderBeforeCatalog();const rows=all();if(rows.length)$('pool').innerHTML='<option value="" '+(sid?'':'selected')+' disabled>Select a pool/system</option>'+groupedPoolOptions(rows);
+ if(P.length)$('standards').innerHTML=[...CATALOG_GROUPS,'OTHER / SAVED POOLS'].map(group=>{const items=sortedPools(P.filter(p=>presetGroup(p)===group));return items.length?'<h3>'+esc(group)+'</h3>'+items.map(p=>{const i=P.indexOf(p);return '<p><b>'+esc(p.n)+'</b> — '+f(p.g)+' GAL<button class="secondary" onclick="editTemplate('+i+')" '+(templatesUnlocked?'':'disabled')+'>Edit Template</button><button class="secondary" onclick="deleteTemplate('+i+')" '+(templatesUnlocked?'':'disabled')+'>Delete Template</button></p>'}).join(''):''}).join('');
+};render();

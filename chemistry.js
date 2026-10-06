@@ -1,4 +1,4 @@
-const DEFAULT_P=[["XLR8",150],["200",500],["300",800],["350",1000],["ECO / EVO",440],["RISE",375],["THRIVE",250],["Plunge 14'",1500],['Plunge 7\'9"',800],["750",2800],["1200",3000],["2000",5000],["3500",5500]].map(([n,g])=>({id:"p"+n,n,g,p:1}));
+const DEFAULT_P=PRESET_CATALOG.map(p=>({...p}));
 let P=localStorage.getItem('standardPoolsV52')===null?DEFAULT_P.map(x=>({...x})):readStore('standardPoolsV52');
 let C=readStore("pools").map(x=>({...x,n:String(x.n).toUpperCase(),facility:String(x.facility||'').toUpperCase()})),sid=localStorage.getItem("sid")||"";
 if(!localStorage.getItem('blankPoolV533')){sid='';localStorage.removeItem('sid');localStorage.setItem('blankPoolV533','1')}

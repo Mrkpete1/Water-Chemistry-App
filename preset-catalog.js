@@ -1,0 +1,25 @@
+// Gallon volumes supplied by the project owner.
+const PRESET_CATALOG=[
+ {id:'acrylic76',n:"ACRYLIC 7'6",g:800,group:'ACRYLIC POOLS'},
+ {id:'acrylic9',n:"ACRYLIC 9'",g:800,group:'ACRYLIC POOLS'},
+ {id:'acrylic500',n:'500',g:2000,group:'ACRYLIC POOLS'},
+ {id:"pPlunge 14'",n:"ACRYLIC 14'",g:1500,group:'ACRYLIC POOLS'},
+ {id:'pTHRIVE',n:'THRIVE',g:250,group:'ACRYLIC POOLS'},
+ {id:'p750',n:'750',g:2800,group:'FABRICATED POOLS'},
+ {id:'fabricated750deep',n:'750 DEEP WELL',g:3000,group:'FABRICATED POOLS'},
+ {id:'p1200',n:'1200',g:3000,group:'FABRICATED POOLS'},
+ {id:'p2000',n:'2000',g:5000,group:'FABRICATED POOLS'},
+ {id:'p3500',n:'3500',g:5554,group:'FABRICATED POOLS'},
+ {id:'fabricated3500ext4',n:"3500 +4' EXT & DEEP WELL",g:7500,group:'FABRICATED POOLS'},
+ {id:'fabricated3500ext8',n:"3500 +8' EXT & DEEP WELL",g:9000,group:'FABRICATED POOLS'},
+ {id:'pXLR8',n:'XLR8',g:150,group:'FREESTANDING POOLS'},
+ {id:'pRISE',n:'RISE',g:375,group:'FREESTANDING POOLS'},
+ {id:'pECO / EVO',n:'ECO',g:440,group:'FREESTANDING POOLS'},
+ {id:'freestandingEVO',n:'EVO',g:440,group:'FREESTANDING POOLS'},
+ {id:'p350',n:'350',g:1000,group:'FREESTANDING POOLS'},
+ {id:'p300',n:'300',g:800,group:'FREESTANDING POOLS'},
+ {id:'p200',n:'200',g:500,group:'FREESTANDING POOLS'},
+ {id:'rejuvenate7',n:"REJUVENATE 7'",g:800,group:'FREESTANDING POOLS'},
+ {id:'rejuvenate9',n:"REJUVENATE 9'",g:800,group:'FREESTANDING POOLS'},
+ {id:'rejuvenate14',n:"REJUVENATE 14'",g:1500,group:'FREESTANDING POOLS'}
+].map(p=>({...p,p:1}));

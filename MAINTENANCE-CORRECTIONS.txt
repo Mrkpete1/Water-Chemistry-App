@@ -1,0 +1,13 @@
+V5.3.9 maintenance corrections
+- Water-level equalization applies to RISE only. XLR8, THRIVE, ECO and EVO
+  begin by turning the system off; other listed pools also start with shutdown.
+- Isolation-valve procedure lists 200, 300, 350, 750, 1200, 2000, 3500,
+  PLUNGE 7'9" and PLUNGE 14', matching standard system menu names.
+- Removed contact-Mark wording from maintenance troubleshooting paragraphs.
+  Existing Email/Call/Text contact buttons are unchanged.
+- RISE, ECO and EVO identified as using CMP PowerClean Mini.
+- Pentair 320 stopped-water-level note explicitly applies to that feeder only.
+- Browser verified required text, removed phrases, mobile width, no script errors.
+
+Manufacturer identity and recharge notes checked against:
+https://www.c-m-p.com/wp-content/uploads/2013/10/25280-200-PowerClean-Mini-Instructions-ENG-FR-SPA.pdf
