@@ -1,0 +1,56 @@
+V5.4.6 - LSI CALCULATOR
+
+ACCESS
+Home > LSI Calculator. Also available from Chemistry Reference.
+Available for all pools and for manual calculation without a selected pool.
+Existing customer links receive this feature after deployment and app update.
+
+HOW TO USE
+Select the pool and open LSI Calculator. Available pH, temperature, TA and
+calcium readings load only from that pool. Dates are shown; readings may come
+from different dates. Confirm or replace them with current measurements.
+Enter measured TDS and CYA. Enter 0 CYA only if confirmed absent. No TDS/CYA
+values are guessed. Dichlor can contribute CYA in a bromine pool.
+Calculate LSI. Results below -0.3 indicate calcium-carbonate-dissolving tendency;
+-0.3 through +0.3 is the commonly accepted pool range; above +0.3 indicates
+scale-forming tendency. This is not a direct metal-corrosion or sanitation test.
+Use it after fresh-fill balancing, during weekly testing, following major
+water/temperature changes, or to investigate recurring scale.
+
+METHOD
+Base-10 logs. Temperature T is kelvin, converted using degrees C + 273.15.
+Corrected alkalinity = total alkalinity - CYA/3.
+A = (log10(TDS) - 1)/10
+B = -13.12 * log10(T) + 34.55
+C = log10(calcium hardness as CaCO3) - 0.4
+D = log10(corrected alkalinity as CaCO3)
+pHs = 9.3 + A + B - C - D
+LSI = measured pH - pHs
+This approximate Carrier/Langelier calculation can differ from rounded lookup
+charts and more complete carbonate saturation models. CYA/3 is approximate;
+borates and other alkalinity contributors are not corrected. Classification
+uses the unrounded result, displayed to three decimal places.
+
+SOURCES (checked October 15, 2026)
+Lenntech, Langelier Index (formula):
+https://www.lenntech.nl/langelier-index.htm
+Pentair IntelliChlor Plus/LT manual, printed page 9 (PDF page 10):
+CYA correction and pool interpretation -0.3 to +0.3.
+https://www.pentair.com/content/dam/extranet/nam/pentair-pool/residential/sanitizers/intellichlor-plus-lt/user-documents/intellichlor-ltplus-manual-en-fr-523854.pdf
+Lenntech LSI calculator, scope of interpretation:
+https://www.lenntech.com/calculators/langelier/index/langelier.htm
+
+VERIFICATION
+Independent Python numerical fixture (25 C, pH 7.5, TA 100, calcium 200,
+TDS 1000, CYA 0): LSI -0.1843852488313562.
+At CYA 60: corrected TA 80, LSI -0.28129526183941245.
+Browser tests passed: numerical fixture, F/C equivalence, CYA correction,
+classification boundaries, invalid inputs, no assumed TDS/CYA, dated readings,
+result clearing after edits, pool isolation, Home/Reference/Routine/Logs,
+and phone layout. No JavaScript page errors.
+
+DEPLOY
+Replace repository files with all extracted ZIP contents, including index.html,
+new lsi.js, manifest.json and sw.js. Keep existing videos in videos/.
+Reload online after deployment to receive V5.4.6. Calculations work offline
+after the updated app is cached; source links require an internet connection.
