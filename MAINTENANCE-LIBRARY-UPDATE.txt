@@ -1,0 +1,52 @@
+V5.4.7 - MAINTENANCE TRACKER AND REUSABLE POOL RESOURCES
+
+OWNER LIBRARY
+Manage pools & custom volumes > Unlock Setup Tool >
+Saved Pool Tips, Manuals & Operating Codes.
+Select a pool model/volume, enter manuals, tips and non-sensitive operating notes,
+and Save Pool Defaults. No operating codes were supplied or invented.
+New customer setups start with these defaults. Existing saved customer resources
+are retained, including intentionally empty notes. Use Load Saved Defaults within
+a selected pool's resource fields to replace them deliberately.
+Save These as Pool Defaults stores the current customer resource fields for reuse.
+Save the customer link and send its new revision to share updated resources.
+Old setup links do not change automatically when the local library changes.
+Export Tips Library Backup and restore it when moving browsers or computers.
+The owner password is a local interface control, not secure access control.
+Never put confidential credentials in this library or in shareable setup links.
+
+MAINTENANCE
+Home > Maintenance Checklist & Filter Pressure. Select a pool first.
+Daily/weekly reminders and monthly filter service use existing app guidance.
+The 350 profile adds monthly main GFCI testing and four-month drain/clean tasks.
+Other models receive general operating reminders, not invented manual schedules.
+Instructions link to existing model/filter/feeder, shock, stainless and log screens.
+Completion requires a date and initials; optional notes are saved.
+Next-due dates use calendar months for monthly/four-month tasks.
+Reminders are shown inside the app; no background push notifications are sent.
+Task completion is separate from entering chemistry readings or recording shock.
+
+FILTER PRESSURE
+Record a clean-filter baseline after cleaning and bleeding air. Enter current PSI
+and the installed filter's reminder rise. Default reminder is +8 PSI (lower end
+of the general 8-10 PSI guidance); equipment-specific thresholds take priority.
+This tracker does not diagnose pressure problems or automatically record cleaning.
+Save a new baseline reading after cleaning when appropriate.
+Data is isolated by pool ID and retained when a pool is renamed or deleted.
+Maintenance CSV exports the selected pool; JSON backup includes all pool records.
+Restoring JSON merges records by ID and does not duplicate existing records.
+A restored record remains attached to its original pool ID. Restoring maintenance
+alone does not recreate deleted pools or synchronize different staff devices.
+
+PUBLISH
+These changes are prepared in the existing GitHub Desktop repository.
+Review Changes, commit with summary Add maintenance tracking and reusable pool tips,
+then Push origin. Existing videos remain untouched. GitHub Pages deploys the app;
+reload online to obtain V5.4.7 and cache the new scripts.
+
+VALIDATION
+Passed browser tests: pressure threshold and pool isolation; completion date and
+initials; due-date month rollover; reload persistence; 350-only additional tasks;
+maintenance backup merge/deduplication; library backup restore; saved defaults,
+facility overrides and locking; customer setup resource display; Logs and LSI;
+phone layout and escaped text. No JavaScript page errors.
