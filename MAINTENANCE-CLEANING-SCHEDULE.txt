@@ -1,0 +1,54 @@
+V5.4.8 - MAINTENANCE AND CLEANING SCHEDULE
+
+Home > Maintenance Checklist & Filter Pressure.
+View Schedule & Cleaning Instructions opens the overall reference schedule.
+
+AFTER EACH USE
+Clean door gasket, if equipped.
+
+DAILY
+Test bromine and pH and record results.
+Check and maintain water at the marked operating level; top off as needed.
+Clean trainer, if equipped. Daily recommended; weekly is the minimum.
+
+WEEKLY
+Replenish bromine tablets on average; check sooner with heavy use.
+Test and record total alkalinity and calcium hardness.
+Weekly/as-needed shock using existing app workflow.
+Clean stainless steel and wipe down accessible pool surfaces.
+Trainer cleaning must not be skipped beyond the weekly minimum.
+
+MONTHLY
+Clean the filter on average, sooner as flow or installed pressure threshold requires.
+Thoroughly clean pool surfaces using compatible products.
+350 profile retains monthly main GFCI testing and four-month drain/clean reminder.
+Monthly surface cleaning is not a blanket requirement to drain every model.
+
+RECORDS AND EQUIPMENT
+Uncheck Door gasket or Trainer if the pool lacks that equipment.
+These settings are pool-specific, persist locally, and are included in maintenance
+backups. Existing maintenance completions retain their IDs and history.
+After-use tasks remain due after each use; one completion does not clear the task
+for the rest of the day. Trainer reminders use daily cadence and flag when the
+weekly minimum has been exceeded. Monthly reminders use calendar months.
+
+SOURCES
+User operating recommendations for gasket, trainer, top-up, tablet and filter cadence.
+HydroWorx Water Chemistry Overview EVO.pdf, pages 1-4 (weekly wipe-down,
+monthly thorough cleaning and daily/weekly chemistry checks).
+HydroWorx RISE Water Chemistry Overview _1_.pdf, pages 1-4.
+Water Chemistry Overview Thrive.pdf, daily/weekly test requirements.
+HydroWorx 3500 Water Chemistry Overview.pdf, pages 1-3.
+Existing 350 manual profile remains model-specific.
+Original PDFs are not included in the public app. No legacy lithium shock,
+chemical targets or fixed re-entry delays were copied into current workflows.
+
+VALIDATION
+Browser checks passed for grouped schedule, equipment visibility and reload,
+cleaning instructions, pressure thresholds, per-pool records, due dates,
+backup restore/deduplication, library defaults/facility overrides, customer links,
+Logs, LSI and phone layout. No page errors.
+
+PUBLISH
+In GitHub Desktop, commit these changes and Push origin. Reload online after
+GitHub Pages deploys to obtain V5.4.8. No ZIP upload or video changes needed.
