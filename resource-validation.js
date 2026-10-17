@@ -4,7 +4,9 @@ function validatePoolResources(r){
  const manuals=r.manuals.map(m=>{
   if(typeof m.title!=='string'||!m.title.trim()||m.title.length>100||typeof m.url!=='string'||m.url.length>2000)throw Error('Invalid document link.');
   const url=new URL(m.url);if(url.protocol!=='https:'||url.username||url.password)throw Error('Use an HTTPS document link.');
-  return {title:m.title.trim(),url:url.href};
+  const expires=(m.expires||'').trim();
+  if(expires && (!/^\d{4}-\d{2}-\d{2}$/.test(expires)||Number.isNaN(Date.parse(expires+'T00:00:00Z'))||new Date(expires+'T00:00:00Z').toISOString().slice(0,10)!==expires))throw Error('Expiration must be a valid YYYY-MM-DD date.');
+  return {title:m.title.trim(),url:url.href,...(expires?{expires}:{})};
  });
  if(typeof r.tips!=='string'||r.tips.length>1500||typeof r.notes!=='string'||r.notes.length>300)throw Error('Resource notes are too long.');
  return {manuals,tips:r.tips.trim(),notes:r.notes.trim()};
