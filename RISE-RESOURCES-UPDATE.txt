@@ -1,0 +1,19 @@
+RISE Customer Resources update
+
+Added eight bundled resources under RISE > Your Pool Resources:
+- RISE Overview (MP4)
+- RISE Controls (MP4)
+- Badu Jet & Massage Hose (MP4)
+- How Water Works (PDF)
+- RISE Water Maintenance Record Logs (PDF)
+- Daily Water Chemistry Log (Word)
+- Pool Maintenance Schedule (Word)
+- Helpful Unit Items (Word)
+
+The two MOV videos were converted to browser-compatible MP4 with audio. All documents and the supplied MP4 are unchanged. Videos play inline and can be downloaded; PDFs can be opened or downloaded; Word files download for editing. No Egnyte links or accounts are used. Files are served by the app after deployment. Videos are loaded on demand and are not stored by the service worker.
+
+The existing RISE owner manual and previous calcium, shock, manual-library, and maintenance changes are included. Resources follow the original RISE model when a preset or customer setup is renamed.
+
+Tests passed: all eight file responses, playback of all three videos, mobile layout, RISE-only display, renamed RISE, preserved owner manual, zero browser script errors, and the previous chemistry/manual regression checks.
+
+Publishing: extract the ZIP and copy the contents of Water-Chemistry-App-main into the repository, preserving the resources/rise folder and all existing folders. Commit and publish using the existing deployment process. This update has not been pushed to GitHub or deployed.
