@@ -1,7 +1,7 @@
 // Resource links are part of a shareable setup, never an access-control boundary.
 function validatePoolResources(r){
  if(!r||typeof r!=='object'||!Array.isArray(r.manuals)||r.manuals.length>5)throw Error('Invalid pool resources.');
- const manuals=r.manuals.map(m=>{
+ const manuals=r.manuals.filter(m=>m && typeof m.title==='string' && /owner[’'s\s-]*manual/i.test(m.title) && !/install(?:ation|er)?/i.test(m.title+' '+m.url)).map(m=>{
   if(typeof m.title!=='string'||!m.title.trim()||m.title.length>100||typeof m.url!=='string'||m.url.length>2000)throw Error('Invalid document link.');
   const url=new URL(m.url);if(url.protocol!=='https:'||url.username||url.password)throw Error('Use an HTTPS document link.');
   return {title:m.title.trim(),url:url.href};
