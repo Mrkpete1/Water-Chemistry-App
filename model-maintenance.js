@@ -2,7 +2,7 @@
 // Model identity is explicit; a construction category is not a service procedure.
 function maintenanceProfile(p){return p?.m==='hw350-revb'||(!p?.m&&p?.n==='350')?'hw350-revb':''}
 function render350Maintenance(){
- const selected=cur();let setup;try{setup=JSON.parse(localStorage.getItem('customerSetupV535')||'null')}catch(e){}
+ const selected=cur();let setup;try{setup=JSON.parse(appStorage.getItem('customerSetupV535')||'null')}catch(e){}
  const source=setup?.pools.find(p=>setup.poolIds?.[keyPool(p)]===selected?.id||keyPool(p)===keyPool(selected||{}));
  const enabled=!!selected&&maintenanceProfile(source)==='hw350-revb';
  $('maintenance350').classList.toggle('hidden',page!=='maintenance350');

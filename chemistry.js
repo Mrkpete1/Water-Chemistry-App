@@ -1,7 +1,7 @@
 const DEFAULT_P=PRESET_CATALOG.map(p=>({...p}));
-let P=localStorage.getItem('standardPoolsV52')===null?DEFAULT_P.map(x=>({...x})):readStore('standardPoolsV52');
-let C=readStore("pools").map(x=>({...x,n:String(x.n).toUpperCase(),facility:String(x.facility||'').toUpperCase()})),sid=localStorage.getItem("sid")||"";
-if(!localStorage.getItem('blankPoolV533')){sid='';localStorage.removeItem('sid');localStorage.setItem('blankPoolV533','1')}
+let P=appStorage.getItem('standardPoolsV52')===null?DEFAULT_P.map(x=>({...x})):readStore('standardPoolsV52');
+let C=readStore("pools").map(x=>({...x,n:String(x.n).toUpperCase(),facility:String(x.facility||'').toUpperCase()})),sid=appStorage.getItem("sid")||"";
+if(!appStorage.getItem('blankPoolV533')){sid='';appStorage.removeItem('sid');appStorage.setItem('blankPoolV533','1')}
 P.forEach(x=>x.n=x.n.toUpperCase());
 const den={ca:.471,bi:.626,acid:.745,soda:.547,spa:.65,hth:.66},soda=[0,.51,1.03,1.54,2.05,2.56],acid=[0,1.23,2.46,3.70,4.93,6.16];
 const all=()=>sortedPools([...P,...C]),cur=()=>sid?all().find(x=>x.id===sid)||null:null,f=(x,d=2)=>Number(x).toLocaleString(undefined,{maximumFractionDigits:d});
@@ -11,7 +11,7 @@ function vol(oz,d){let c=(oz/16)/d;if(c>=.5)return `≈ ${doseNumber(c)} cups`;l
 function R(status,oz,product,density,msg){return{status,oz,product,density,msg}}
 function calciumTarget(){
  const pool=cur();
- let setup=null;try{setup=JSON.parse(localStorage.getItem('customerSetupV535')||'null')}catch(e){}
+ let setup=null;try{setup=JSON.parse(appStorage.getItem('customerSetupV535')||'null')}catch(e){}
  const source=setup?.pools?.find(p=>setup.poolIds?.[keyPool(p)]===pool?.id);
  const model=source?.n || PRESET_CATALOG.find(p=>p.id===pool?.id)?.n || pool?.n || '';
  return /^(THRIVE|XLR8)$/i.test(model)?{min:250,max:350}:{min:200,max:400};

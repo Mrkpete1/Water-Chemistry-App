@@ -4,8 +4,31 @@
 .modalbox{background:white;width:min(720px,100%);border-radius:16px;padding:14px;max-height:90vh;overflow:auto}
 .modal.hidden{display:none}.modal video{width:100%;border-radius:12px;background:#000}
 .statusline{padding:10px;border-radius:10px;background:#f5f7f9;margin:8px 0}
-.warning{background:#fff3d6;border-left:5px solid #a95d00;padding:14px;margin:12px 0;color:#583000}.workflow{background:#123b5d;color:white;padding:14px;border-radius:10px;font-weight:800;margin:14px 0}details{margin:14px 0;padding:12px;background:#edf4f8;border-radius:10px}summary{cursor:pointer;font-weight:700}input,select,textarea{border:1px solid #9caeb9}button{cursor:pointer}a{color:#155d8d}#notice:empty{display:none}#notice{position:fixed;top:8px;right:8px;background:#123b5d;color:white;padding:12px;z-index:30;max-width:80%}h2{font-size:23px}nav{z-index:10}section{scroll-margin-top:12px}dialog{border:1px solid #b9cbd6;border-radius:16px;max-width:440px;width:calc(100% - 60px)}dialog::backdrop{background:#0008}button:disabled{opacity:.5;cursor:not-allowed}.check{font-size:14px;font-weight:400;padding:10px 0;line-height:1.5}.check input{width:20px;height:20px;margin-right:6px;vertical-align:middle}</style></head><body><header><h2>Mark's Water Chemistry Assistant · V5.5.2</h2><div id="hdr"></div></header><main>
-<section id="home"><div class="card"><h3>Pool / System</h3><select id="pool"></select><button class="secondary" onclick="show('manage')">Manage pools & custom volumes</button></div><div class="card"><h3>What are you doing today?</h3><button onclick="fresh()">Fresh Fill / Refill</button><button onclick="routine()">Routine Water Test</button><button onclick="openShock('weekly')">Weekly / As-needed Shock</button><button onclick="show('logs')">Daily & Weekly Logs</button><button id="homeManualButton" class="secondary" type="button" onclick="openSelectedPoolManual()">📘 OWNER'S MANUAL</button><button onclick="show('videos')">Test Instruction Videos</button><button class="secondary" onclick="show('ref')">Chemistry Reference</button></div></section>
+.warning{background:#fff3d6;border-left:5px solid #a95d00;padding:14px;margin:12px 0;color:#583000}.workflow{background:#123b5d;color:white;padding:14px;border-radius:10px;font-weight:800;margin:14px 0}details{margin:14px 0;padding:12px;background:#edf4f8;border-radius:10px}summary{cursor:pointer;font-weight:700}input,select,textarea{border:1px solid #9caeb9}button{cursor:pointer}a{color:#155d8d}#notice:empty{display:none}#notice{position:fixed;top:8px;right:8px;background:#123b5d;color:white;padding:12px;z-index:30;max-width:80%}h2{font-size:23px}nav{z-index:10}section{scroll-margin-top:12px}dialog{border:1px solid #b9cbd6;border-radius:16px;max-width:440px;width:calc(100% - 60px)}dialog::backdrop{background:#0008}button:disabled{opacity:.5;cursor:not-allowed}.check{font-size:14px;font-weight:400;padding:10px 0;line-height:1.5}.check input{width:20px;height:20px;margin-right:6px;vertical-align:middle}</style><style>
+[hidden]{display:none!important}
+body:not(.facility-open) > :is(header,main,nav,#notice,.modal,dialog){display:none!important}
+#facilitySignIn{max-width:440px;margin:32px auto;padding:18px}
+#facilityLoginForm input[type=checkbox]{width:auto}
+#facilitySignOut{width:auto;margin-left:auto;padding:8px 12px}
+#facilityStatusBar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+</style></head><body>
+<section id="facilitySignIn" aria-labelledby="facilityLoginTitle">
+ <div class="card"><h1 id="facilityLoginTitle">Water Chemistry Assistant</h1>
+ <p id="facilityLoginStatus" role="status">Checking facility sign-in…</p>
+ <form id="facilityLoginForm" hidden>
+  <label for="facilityUsername">Facility username</label>
+  <input id="facilityUsername" name="username" autocomplete="username" autocapitalize="none" required>
+  <label for="facilityPassword">Password</label>
+  <input id="facilityPassword" name="password" type="password" autocomplete="current-password" required>
+  <label class="check"><input name="remember" type="checkbox" checked> Stay signed in on this device</label>
+  <button type="submit">Sign in</button>
+ </form>
+ <button id="facilityRetry" type="button" hidden>Try again</button>
+ <button id="facilityCancelSession" type="button" class="secondary" hidden>Sign out</button>
+ </div>
+</section>
+<header><div id="facilityStatusBar"><strong id="facilityBannerName"></strong><span id="facilitySyncStatus" role="status"></span><button id="facilitySignOut" type="button" class="secondary">Sign out</button></div><h2>Mark's Water Chemistry Assistant · V5.5.2</h2><div id="hdr"></div></header><main>
+<section id="home"><div class="card"><h3>Pool / System</h3><select id="pool"></select></div><div class="card"><h3>What are you doing today?</h3><button onclick="fresh()">Fresh Fill / Refill</button><button onclick="routine()">Routine Water Test</button><button onclick="openShock('weekly')">Weekly / As-needed Shock</button><button onclick="show('logs')">Daily & Weekly Logs</button><button id="homeManualButton" class="secondary" type="button" onclick="openSelectedPoolManual()">📘 OWNER'S MANUAL</button><button onclick="show('videos')">Test Instruction Videos</button><button class="secondary" onclick="show('ref')">Chemistry Reference</button></div></section>
 <section id="manage" class="hidden"><div class="card"><h3 id="poolFormTitle">Add Pool</h3><label for="pn">Pool / system name</label><input id="pn"><label for="pf">Facility / customer (optional)</label><input id="pf"><label for="pg">Volume (gallons)</label><input id="pg" type="number" min="1"><button onclick="addPool()">Save Pool</button><button class="secondary" onclick="cancelEdit()">Cancel Edit</button></div><div class="card"><h3>Saved Pools</h3><div id="plist"></div></div><div class="card"><h3>Standard HydroWorx Systems</h3><p id="templateStatus">Templates locked.</p><p class="muted">Owner controls for this browser. Changes apply on this device and preserve existing history.</p><button id="unlockTemplates" class="secondary" onclick="openPassword()">Unlock Templates</button><button id="lockTemplates" class="secondary hidden" onclick="lockTemplates()">Lock Templates</button><div id="standards"></div></div></section>
 <section id="fresh" class="hidden"><div class="card"><h3>Fresh Fill / Refill</h3><b>Calcium → Alkalinity → pH → Initial Shock & Bromine Startup</b><p class="muted">Complete each step and retest before continuing.</p></div><div id="steps"></div></section>
 <section id="routine" class="hidden"><div class="card"><h3>Routine Water Test</h3><div id="routineForm"></div></div></section>
@@ -15,17 +38,40 @@
 </section>
 <section id="videos" class="hidden">
 <div class="card"><h3>Test Instruction Videos</h3><p class="muted">Watch the test procedure before entering a reading.</p></div>
-<div class="card"><h3>Bromine Test</h3><video class="video" controls playsinline preload="metadata" src="videos/Bromine.mp4"></video></div>
-<div class="card"><h3>pH Test</h3><video class="video" controls playsinline preload="metadata" src="videos/PH.mp4"></video></div>
-<div class="card"><h3>Total Alkalinity Test</h3><video class="video" controls playsinline preload="metadata" src="videos/Alkalinity.mp4"></video></div>
-<div class="card"><h3>Calcium Hardness Test</h3><video class="video" controls playsinline preload="metadata" src="videos/Calcium.mp4"></video></div>
+<div class="card"><h3>Bromine Test</h3><video class="video" controls playsinline preload="metadata" src="../videos/Bromine.mp4"></video></div>
+<div class="card"><h3>pH Test</h3><video class="video" controls playsinline preload="metadata" src="../videos/PH.mp4"></video></div>
+<div class="card"><h3>Total Alkalinity Test</h3><video class="video" controls playsinline preload="metadata" src="../videos/Alkalinity.mp4"></video></div>
+<div class="card"><h3>Calcium Hardness Test</h3><video class="video" controls playsinline preload="metadata" src="../videos/Calcium.mp4"></video></div>
 </section>
 <section id="history" class="hidden">
-<div class="card"><h3>Water Test History</h3><label for="historyScope">History scope</label><select id="historyScope" onchange="renderHistory()"><option value="selected">Selected pool</option><option value="all">All pools, including deleted / legacy pools</option></select><div id="historyList"></div><button class="secondary" onclick="exportHistory()">Export History (CSV)</button><button class="secondary" onclick="clearHistory()">Clear History</button></div>
+<div class="card"><h3>Water Test History</h3><label for="historyScope">History scope</label><select id="historyScope" onchange="renderHistory()"><option value="selected">Selected pool</option><option value="all">All pools, including deleted / legacy pools</option></select><div id="historyList"></div><button class="secondary" onclick="exportHistory()">Export History (CSV)</button></div>
 </section>
 
 <section id="ref" class="hidden"><div class="card"><h3>Targets</h3><p>Calcium Hardness: <b>200–400 ppm ideal; THRIVE / XLR8: 250–350 ppm</b><br>TA: <b>80–120 ppm</b><br>pH: <b>7.2–7.8</b><br>Bromine: <b>3–5 ppm, aim 4</b></p></div><div class="card"><h3>pH</h3><p>Do not dose from pH alone. Low pH uses Taylor R-0006 base demand; high pH uses R-0005 acid demand. Use 1–5 drops; larger demand is corrected in stages and retested.</p></div><div class="card"><h3>Safety</h3><p>Make one adjustment at a time. RUN JETS 15 MINUTES → WAIT 30 MINUTES → RETEST before another adjustment. Never mix chemicals. Follow the exact product label. Weight is preferred; volume is approximate.</p></div></section>
 <section id="shock" class="hidden"><div id="shockForm"></div></section></main><div id="notice" role="status" aria-live="polite"></div><nav><button onclick="show('home')">Home</button><button onclick="fresh()">Fresh Fill</button><button onclick="show('history')">History</button><button onclick="show('logs')">Logs</button><button onclick="show('ref')">Reference</button></nav><div id="videoModal" class="modal hidden" onclick="closeVideo(event)">
 <div class="modalbox"><button class="secondary" onclick="closeVideo()">Close Video</button><h3 id="videoTitle"></h3><video id="helpVideo" controls playsinline preload="metadata"></video></div></div>
-<dialog id="passwordDialog" aria-labelledby="passwordTitle"><form onsubmit="submitPassword(event)"><h3 id="passwordTitle">Template Password</h3><p id="passwordHint"></p><label for="templatePass">Password</label><input id="templatePass" type="password" required autocomplete="current-password"><p id="passwordError" class="bad" role="alert"></p><button id="passwordSubmit" type="submit">Continue</button><button type="button" class="secondary" onclick="$('passwordDialog').close()">Cancel</button></form></dialog><script src="storage.js"></script><script src="preset-catalog.js"></script><script src="chemistry.js"></script><script src="template-auth.js"></script><script src="pools.js"></script><script src="ensure-all-templates.js"></script><script src="catalog-migration.js"></script><script src="app.js"></script><script src="shock.js"></script><script src="contact-buttons.js"></script><script src="resource-validation.js"></script><script src="customer-setup.js"></script><script src="customer-records.js"></script><script src="maintenance.js"></script><script src="catalog-ui.js"></script><script src="pool-resource-library.js"></script><script src="owner-manuals.js"></script><script src="customer-resources.js"></script><script src="model-maintenance.js"></script><script src="stainless-care.js"></script><script src="lsi.js"></script><script src="maintenance-tracker.js"></script><script src="cleaning-schedule.js"></script><script src="equipment-profile.js"></script></body></html>
+<dialog id="passwordDialog" aria-labelledby="passwordTitle"><form onsubmit="submitPassword(event)"><h3 id="passwordTitle">Template Password</h3><p id="passwordHint"></p><label for="templatePass">Password</label><input id="templatePass" type="password" required autocomplete="current-password"><p id="passwordError" class="bad" role="alert"></p><button id="passwordSubmit" type="submit">Continue</button><button type="button" class="secondary" onclick="$('passwordDialog').close()">Cancel</button></form></dialog><script type="text/plain" id="facilityAppScripts">storage.js
+preset-catalog.js
+chemistry.js
+template-auth.js
+pools.js
+ensure-all-templates.js
+catalog-migration.js
+app.js
+shock.js
+contact-buttons.js
+resource-validation.js
+customer-setup.js
+customer-records.js
+maintenance.js
+catalog-ui.js
+pool-resource-library.js
+owner-manuals.js
+customer-resources.js
+model-maintenance.js
+stainless-care.js
+lsi.js
+maintenance-tracker.js
+cleaning-schedule.js
+equipment-profile.js</script><script type="module" src="facility-bootstrap.js"></script></body></html>
 

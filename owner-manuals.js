@@ -38,7 +38,7 @@ function manualForModel(name,preview=false) {
  const draft = preview && draftManuals.find(m=>m.model===model);
  if(draft) return {...draft,draft:true};
  const m = publishedManuals.find(m=>m.model===model);
- return m ? {...m,url:new URL(m.file,document.baseURI).href} : null;
+ return m ? {...m,url:new URL('../'+m.file,document.baseURI).href} : null;
 }
 function ownerManualCard(name,preview=false) {
  const m = manualForModel(name,preview);
@@ -125,7 +125,7 @@ $('exportOwnerManuals').onclick=async()=>{
 const renderSetupBeforeOwnerManuals=renderSetupTool;
 renderSetupTool=function(){renderSetupBeforeOwnerManuals();if(templatesUnlocked)renderManualAdmin();else manualAdmin.open=false;};
 (async()=>{
- try {const response=await fetch(new URL('manuals/manifest.json',document.baseURI));if(!response.ok)throw Error();publishedManuals=validateManualManifest(await response.json());}
+ try {const response=await fetch(new URL('../manuals/manifest.json',document.baseURI));if(!response.ok)throw Error();publishedManuals=validateManualManifest(await response.json());}
  catch(e){manualLibraryError='Owner’s manual library could not be loaded. Reload online or contact your HydroWorx representative.';}
  manualLibraryLoaded=true;
  try {await refreshManualDrafts();}catch(e){/* Published manuals remain usable when local storage is unavailable. */}

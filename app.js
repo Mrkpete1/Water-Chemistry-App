@@ -1,21 +1,24 @@
 
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const FLOW='RUN JETS 15 MINUTES → WAIT 30 MINUTES → RETEST';
-let HISTORY=readStore('chemHistory'),DAILY=readStore('dailyChemLog'),WEEKLY=readStore('weeklyChemLog'),editing=null,logType='daily',page='home';
-const uid=()=>crypto.randomUUID();
-// Match old records only when both name and volume identify exactly one pool.
-if(!localStorage.getItem('chemV5Backup'))persist('chemV5Backup',{pools:readStore('pools'),HISTORY,DAILY,WEEKLY});
-for(const records of [HISTORY,DAILY,WEEKLY])for(const r of records){r.pool=String(r.pool||'UNKNOWN POOL').toUpperCase();if(!r.poolId){const matches=all().filter(p=>p.n===r.pool&&+p.g===+r.gallons);r.poolId=matches.length===1?matches[0].id:'legacy:'+r.pool+':'+r.gallons}}
-persist('chemHistory',HISTORY);persist('dailyChemLog',DAILY);persist('weeklyChemLog',WEEKLY);
+let HISTORY = [], DAILY = [], WEEKLY = [], editing = null, logType = 'daily', page = 'home';
+const uid = () => crypto.randomUUID();
+function replaceFacilityHistory(records) {
+ HISTORY = records.history;
+ DAILY = records.daily;
+ WEEKLY = records.weekly;
+ if (page === 'history') renderHistory();
+ if (page === 'logs') renderLogEntries(logType);
+}
 const notify=msg=>{$('notice').textContent=msg;setTimeout(()=>$('notice').textContent='',5000)};
-function save(){persist('pools',C);localStorage.setItem('sid',sid)}
+function save(){appStorage.setItem('sid',sid)}
 $('pool').onchange=e=>{sid=e.target.value;save();render()};
 function show(id){const target=$(id);if(!target||target.tagName!=='SECTION')return;document.querySelectorAll('main > section').forEach(s=>s.classList.toggle('hidden',s.id!==id));page=id;if(id==='logs')renderLog(logType);if(id==='history')renderHistory();if(id==='manage')render();scrollTo(0,0)}
-const TEST_VIDEOS={1:{title:'Calcium Hardness',src:'videos/Calcium.mp4'},2:{title:'Total Alkalinity',src:'videos/Alkalinity.mp4'},3:{title:'pH',src:'videos/PH.mp4'},4:{title:'Bromine',src:'videos/Bromine.mp4'}};
+const TEST_VIDEOS={1:{title:'Calcium Hardness',src:'../videos/Calcium.mp4'},2:{title:'Total Alkalinity',src:'../videos/Alkalinity.mp4'},3:{title:'pH',src:'../videos/PH.mp4'},4:{title:'Bromine',src:'../videos/Bromine.mp4'}};
 function openVideo(i){$('videoTitle').textContent=TEST_VIDEOS[i].title;$('helpVideo').src=TEST_VIDEOS[i].src;$('videoModal').classList.remove('hidden')}
 function closeVideo(e){if(e&&e.target!==$('videoModal'))return;$('helpVideo').pause();$('helpVideo').removeAttribute('src');$('helpVideo').load();$('videoModal').classList.add('hidden')}
 const tips={1:['Red → clear: Metals. Add extra R-0012 first.','Purple: Magnesium interference.','Never blue: Very high CH or bad indicator.','Fades: Cold water.'],2:['Blue instead of green: High chlorine. Add extra R-0007.','Purple: Very low TA (<40 ppm).','Yellowish: Old R-0008.','Stays green: Dilute 50/50.'],3:['Purple: High chlorine. Add R-0007.','Yellow: Sample contamination.','Grey/muddy: Dirty block/cloudy water.'],4:['No pink: High chlorine bleaching; add R-0007.','Dark purple: High chlorine; dilute.','Pink fades: Combined chlorine.','Orange: Bromine.'],5:['No cloud: Wrong ratio.','Slow cloud: Cold water.','Always zero: Clarifier or floc.']};
-function help(i){return `<details><summary>Test Doesn't Look Right?</summary>${i===4?'<p>The supplied guide describes Chlorine (DPD) color troubleshooting; orange is identified as bromine.</p>':''}<ul>${tips[i].map(t=>'<li>'+esc(t)+'</li>').join('')}</ul><p>From the supplied Taylor troubleshooting guide. Apply reagent changes to the test sample, not the pool. Follow your kit instructions for sample size, reagent quantities and dilution calculations.</p><a href="Taylor-Troubleshooting.pdf" target="_blank" rel="noopener">Complete guide (PDF)</a></details>`}
+function help(i){return `<details><summary>Test Doesn't Look Right?</summary>${i===4?'<p>The supplied guide describes Chlorine (DPD) color troubleshooting; orange is identified as bromine.</p>':''}<ul>${tips[i].map(t=>'<li>'+esc(t)+'</li>').join('')}</ul><p>From the supplied Taylor troubleshooting guide. Apply reagent changes to the test sample, not the pool. Follow your kit instructions for sample size, reagent quantities and dilution calculations.</p><a href="../Taylor-Troubleshooting.pdf" target="_blank" rel="noopener">Complete guide (PDF)</a></details>`}
 function aids(i){return `<button class="helpbtn" onclick="openVideo(${i})">▶ How to Test ${TEST_VIDEOS[i].title}</button>${help(i)}`}
 // V4 formulas, lookup values and densities remain in chemistry.js. Apply dose limits here.
 const originalTA=ta;
@@ -48,28 +51,74 @@ function demandSelect(id,callback){return `<label for="${id}" id="${id}Label">Ta
 function product(id,callback){return `<label for="${id}">Bromine product</label><select id="${id}" onchange="${callback}"><option>SpaGuard</option><option>HTH</option></select>`}
 function value(id){const s=$(id).value;if(s==='')return null;const v=Number(s);return Number.isFinite(v)&&v>=0?v:NaN}
 function valid(v,isPH=false){return v!==null&&Number.isFinite(v)&&v>=0&&(!isPH||v<=14)}
-function fresh(){if(!cur()){show('manage');notify('Add a pool first.');return}show('fresh');$('steps').innerHTML=labels.map((n,j)=>{const i=j+1;return `<div id="s${i}" class="${i>1?'hidden':''}"><div class="card"><h3>${i}. ${n}</h3><p>${j===0?calciumRange():ranges[j]}</p>${aids(i)}${numeric('v'+i,'Your test result','upd()')}${i===2?'<div id="taPHWrap" class="hidden">'+numeric('taPH','Current pH — needed before decreasing TA','upd()')+'</div>':''}${i===3?'<div id="demand" class="hidden">'+demandSelect('drops','upd()')+'</div>':''}${i===4?product('prod','upd()')+bromineWarning:''}<div id="r${i}" aria-live="polite"></div></div></div>`}).join('')}
+function fresh(){if(!cur()){show('home');notify('Select a facility pool first.');return}show('fresh');$('steps').innerHTML=labels.map((n,j)=>{const i=j+1;return `<div id="s${i}" class="${i>1?'hidden':''}"><div class="card"><h3>${i}. ${n}</h3><p>${j===0?calciumRange():ranges[j]}</p>${aids(i)}${numeric('v'+i,'Your test result','upd()')}${i===2?'<div id="taPHWrap" class="hidden">'+numeric('taPH','Current pH — needed before decreasing TA','upd()')+'</div>':''}${i===3?'<div id="demand" class="hidden">'+demandSelect('drops','upd()')+'</div>':''}${i===4?product('prod','upd()')+bromineWarning:''}<div id="r${i}" aria-live="polite"></div></div></div>`}).join('')}
 function setDemand(p,wrap,id){const needed=valid(p,true)&&(p<7.2||p>7.8),direction=p<7.2?'BASE-demand (R-0006)':'ACID-demand (R-0005)';$(wrap).classList.toggle('hidden',!needed);if($(id).dataset.direction!==direction||!needed)$(id).value='0';$(id).dataset.direction=direction;$(id+'Label').textContent='Run Taylor '+direction+' test: drops to endpoint'}
 function upd(){const g=cur().g,v=[1,2,3,4].map(i=>value('v'+i));setDemand(v[2],'demand','drops');$('taPHWrap').classList.toggle('hidden',!(valid(v[1])&&v[1]>120));let gate=true;for(let i=1;i<=4;i++){$('s'+i).classList.toggle('hidden',!gate);if(!gate){$('v'+i).value='';$('r'+i).innerHTML='';continue}const n=v[i-1];if(n===null){$('r'+i).innerHTML='';gate=false;continue}if(!valid(n,i===3)){$('r'+i).textContent='Enter a valid nonnegative reading'+(i===3?' (pH 0–14).':'.');gate=false;continue}const r=i===1?ca(n,g):i===2?ta(n,g,value('taPH')):i===3?ph(n,g,+$('drops').value):br(n,g,$('prod').value);$('r'+i).innerHTML=out(r);gate=['IN RANGE','MINIMUM MET'].includes(r.status)}}
-function routine(){if(!cur()){show('manage');notify('Add a pool first.');return}show('routine');$('routineForm').innerHTML=labels.map((n,j)=>`${numeric(['rc','rt','rp','rb'][j],n+' — '+(j===0?calciumRange():ranges[j]),'routineChanged()')}${aids(j+1)}${j===2?'<div id="routineDemand" class="hidden">'+demandSelect('rd','calcRoutine()')+'</div>':''}`).join('')+product('rprod','calcRoutine()')+bromineWarning+'<label for="rnote">Notes</label><textarea id="rnote"></textarea><button onclick="calcRoutine()">Review Results</button><button class="secondary" onclick="saveRoutine()">Save Test to History</button><div id="rr" aria-live="polite"></div>'}
+function routine(){if(!cur()){show('home');notify('Select a facility pool first.');return}show('routine');$('routineForm').innerHTML=labels.map((n,j)=>`${numeric(['rc','rt','rp','rb'][j],n+' — '+(j===0?calciumRange():ranges[j]),'routineChanged()')}${aids(j+1)}${j===2?'<div id="routineDemand" class="hidden">'+demandSelect('rd','calcRoutine()')+'</div>':''}`).join('')+product('rprod','calcRoutine()')+bromineWarning+'<label for="rnote">Notes</label><textarea id="rnote"></textarea><button onclick="calcRoutine()">Review Results</button><button class="secondary" onclick="saveRoutine()">Save Test to History</button><div id="rr" aria-live="polite"></div>'}
 function routineChanged(){setDemand(value('rp'),'routineDemand','rd');$('rr').innerHTML=''}
 function routineResults(){const ids=['rc','rt','rp','rb'],g=cur().g;let a=[];for(let i=0;i<4;i++){const v=value(ids[i]);if(v===null)continue;if(!valid(v,i===2)){alert('Enter valid nonnegative readings; pH must be 0–14.');return null}a.push([labels[i],i===0?ca(v,g):i===1?ta(v,g,value('rp')):i===2?ph(v,g,+$('rd').value):br(v,g,$('rprod').value)])}return a}
 function calcRoutine(){const a=routineResults();if(!a)return;const corrections=a.filter(([,r])=>!['IN RANGE','MINIMUM MET'].includes(r.status));$('rr').innerHTML=`<h3>${!a.length?'Enter at least one reading.':corrections.length?corrections.length+' reading(s) need attention.':'All entered readings meet targets.'}</h3><p>${a.length}/4 readings entered. ${a.length<4?'Untested values have not been assessed.':''}</p>${corrections.length?'<p>Make one adjustment at a time in Calcium → TA → pH → Bromine order. Retest before the next correction.</p>':''}`+corrections.map(([n,r])=>`<hr><h3>${n}</h3>${out(r)}`).join('')}
-function saveRoutine(){const a=routineResults();if(!a||!a.length)return alert('Enter at least one valid reading.');let readings={};['rc','rt','rp','rb'].forEach((id,i)=>{if($(id).value!=='')readings[['Calcium','TA','pH','Bromine'][i]]=$(id).value});const r={id:uid(),poolId:cur().id,pool:cur().n,gallons:cur().g,date:new Date().toISOString(),mode:'Routine Test',readings,results:a,note:$('rnote').value};persist('chemHistory',[r,...HISTORY]);HISTORY.unshift(r);notify('Water test saved.')}
+async function saveRoutine(){const a=routineResults();if(!a||!a.length)return alert('Enter at least one valid reading.');let readings={};['rc','rt','rp','rb'].forEach((id,i)=>{if($(id).value!=='')readings[['Calcium','TA','pH','Bromine'][i]]=$(id).value});const r={id:uid(),poolId:cur().id,pool:cur().n,gallons:cur().g,date:new Date().toISOString(),mode:'Routine Test',readings,results:a,note:$('rnote').value};if (await window.facilityLogs.append('history', r)) notify('Water test saved to shared history.')}
 function localDT(){const d=new Date(),z=n=>String(n).padStart(2,'0');return{date:`${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`,time:`${z(d.getHours())}:${z(d.getMinutes())}`}}
 const fields={daily:[['bromine','Bromine (ppm)'],['pH','pH'],['temp','Temperature (°F)']],weekly:[['ta','Total Alkalinity (ppm)'],['calcium','Calcium Hardness (ppm)']]};
 function renderDaily(){renderLog('daily')}function renderWeekly(){renderLog('weekly')}
-function renderLog(type){if(!cur()){$('logForm').innerHTML='<p>Add a pool in Manage Pools before recording readings.</p>';$('logEntries').innerHTML='';return}logType=type;const d=localDT(),data=(type==='daily'?DAILY:WEEKLY).filter(x=>x.poolId===cur()?.id);$('logForm').innerHTML=`<div class="card"><h3>${type==='daily'?'Daily':'Weekly'} Log · ${esc(cur().n)}</h3><p>${data.length?'Last reading: '+esc(data[0].date)+' '+esc(data[0].time):'No readings for this pool yet.'}</p>${(type==='daily'?[4,3]:[2,1]).map(aids).join('')}<div class="logrow"><div><label for="logDate">Date</label><input id="logDate" type="date" value="${d.date}"></div><div><label for="logTime">Time</label><input id="logTime" type="time" value="${d.time}"></div></div>${fields[type].map(([key,label])=>numeric('log_'+key,label)).join('')}<label for="logInitials">Initials</label><input id="logInitials" maxlength="12"><label for="logNotes">Notes</label><textarea id="logNotes"></textarea><button onclick="saveLog()">Save ${type==='daily'?'Daily':'Weekly'} Reading</button></div>`;$('logEntries').innerHTML=`<div class="card"><h3>Recent ${type==='daily'?'Daily':'Weekly'} Readings</h3>${data.length?data.slice(0,30).map(x=>`<div class="entry"><b>${esc(x.date)} ${esc(x.time)}</b><p>${fields[type].map(([k,l])=>esc(l)+': '+esc(x[k]??'')).join(' · ')}</p><p>Initials: ${esc(x.initials)}<br>${esc(x.notes)}</p></div>`).join(''):'<p>No readings saved.</p>'}<button class="secondary" onclick="exportLog('${type}')">Export Selected Pool CSV</button><p>Deleted pool records remain available in History → All pools.</p></div>`}
-function saveLog(){const r={id:uid(),poolId:cur().id,pool:cur().n,gallons:cur().g,date:$('logDate').value,time:$('logTime').value,initials:$('logInitials').value.trim(),notes:$('logNotes').value};if(!r.date||!r.time||!r.initials)return alert('Enter date, time and initials.');for(const [k]of fields[logType]){const v=value('log_'+k);if(!valid(v,k==='pH'))return alert('Complete all readings with valid nonnegative numbers; pH must be 0–14.');r[k]=v}const data=logType==='daily'?DAILY:WEEKLY;persist(logType==='daily'?'dailyChemLog':'weeklyChemLog',[r,...data]);data.unshift(r);renderLog(logType);notify('Reading saved.')}
-function records(){return [...HISTORY,...DAILY.map(x=>({...x,mode:'Daily Log',readings:{Bromine:x.bromine,pH:x.pH,Temperature:x.temp},note:x.notes})),...WEEKLY.map(x=>({...x,mode:'Weekly Log',readings:{TA:x.ta,Calcium:x.calcium},note:x.notes}))].sort((a,b)=>(b.date+' '+(b.time||'')).localeCompare(a.date+' '+(a.time||'')))}
+function renderLog(type){if(!cur()){$('logForm').innerHTML='<p>Select a facility pool on Home before recording readings.</p>';$('logEntries').innerHTML='';return}logType=type;const d=localDT();$('logForm').innerHTML=`<div id="logEntryCard" class="card"><h3>${type==='daily'?'Daily':'Weekly'} Log · ${esc(cur().n)}</h3><p id="logLastReading"></p>${(type==='daily'?[4,3]:[2,1]).map(aids).join('')}<div class="logrow"><div><label for="logDate">Date</label><input id="logDate" type="date" value="${d.date}"></div><div><label for="logTime">Time</label><input id="logTime" type="time" value="${d.time}"></div></div>${fields[type].map(([key,label])=>`<label for="log_${key}">${label}${key === 'temp' ? ' (optional)' : ''}</label><input id="log_${key}" type="number" min="0"${key === 'pH' ? ' max="14"' : ''} step="${type === 'daily' ? '0.1' : 'any'}" inputmode="decimal" aria-describedby="logError">`).join('')}<label for="logInitials">Initials</label><input id="logInitials" maxlength="12"><label for="logNotes">Notes</label><textarea id="logNotes"></textarea><p id="logError" class="bad" role="alert"></p><button onclick="saveLog()">Save ${type==='daily'?'Daily':'Weekly'} Reading</button></div>`;renderLogEntries(type)}
+function renderLogEntries(type) {
+ if (!cur() || !$('logLastReading')) return;
+ const data = (type === 'daily' ? DAILY : WEEKLY).filter(x => x.poolId === cur().id);
+ $('logLastReading').textContent = data.length ?
+  'Last reading: ' + data[0].date + ' ' + data[0].time : 'No readings for this pool yet.';
+ $('logEntries').innerHTML=`<div class="card"><h3>Recent ${type==='daily'?'Daily':'Weekly'} Readings</h3>${data.length?data.slice(0,30).map(x=>`<div class="entry"><b>${esc(x.date)} ${esc(x.time)}</b><p>${fields[type].filter(([k]) => x[k] != null).map(([k,l])=>esc(l)+': '+esc(x[k])).join(' · ')}</p><p>Initials: ${esc(x.initials)}<br>${esc(x.notes)}</p></div>`).join(''):'<p>No readings saved.</p>'}<button class="secondary" onclick="exportLog('${type}')">Export Selected Pool CSV</button><p>Deleted pool records remain available in History → All pools.</p></div>`}
+async function saveLog() {
+ const pool = cur();
+ const form = $('logEntryCard');
+ if (!pool || !form) return;
+ const type = logType;
+ const error = $('logError');
+ error.textContent = '';
+ form.querySelectorAll('[aria-invalid]').forEach(input => input.removeAttribute('aria-invalid'));
+ const showFieldError = (input, message) => {
+  error.textContent = message;
+  input.setAttribute('aria-invalid', 'true');
+  input.focus();
+ };
+ const date = $('logDate').value;
+ const time = $('logTime').value;
+ const initials = $('logInitials').value.trim();
+ if (!date) return showFieldError($('logDate'), 'Enter the reading date.');
+ if (!time) return showFieldError($('logTime'), 'Enter the reading time.');
+ if (!initials) return showFieldError($('logInitials'), 'Enter your initials.');
+ const r = {id:uid(), poolId:pool.id, pool:pool.n, gallons:pool.g, date, time, initials, notes:$('logNotes').value};
+ for (const [key, label] of fields[type]) {
+  const input = $('log_' + key);
+  if (input.validity.badInput) return showFieldError(input, 'Enter ' + label + ' as a number.');
+  const reading = value(input.id);
+  if (reading === null && key === 'temp') continue;
+  if (reading === null) return showFieldError(input, 'Enter ' + label + '.');
+  if (!valid(reading, key === 'pH')) {
+   return showFieldError(input, key === 'pH' ? 'Enter a pH from 0 to 14.' : label + ' must be zero or higher.');
+  }
+  r[key] = reading;
+ }
+ const controls = [...form.querySelectorAll('input,textarea,button')];
+ controls.forEach(control => control.disabled = true);
+ try {
+  if (await window.facilityLogs.append(type, r)) {
+   if (page === 'logs' && $('logEntryCard') === form) renderLog(type);
+   notify('Reading saved to shared history.');
+  }
+ } finally {
+  controls.forEach(control => control.disabled = false);
+ }
+}
+function records(){return [...HISTORY,...DAILY.map(x=>({...x,mode:'Daily Log',readings:{Bromine:x.bromine,pH:x.pH,...(x.temp == null ? {} : { Temperature:x.temp })},note:x.notes})),...WEEKLY.map(x=>({...x,mode:'Weekly Log',readings:{TA:x.ta,Calcium:x.calcium},note:x.notes}))].sort((a,b)=>(b.date+' '+(b.time||'')).localeCompare(a.date+' '+(a.time||'')))}
 function scopedRecords(){return records().filter(x=>$('historyScope').value==='all'||x.poolId===cur()?.id)}
 function renderHistory(){const data=scopedRecords();$('historyList').innerHTML=data.length?data.map(x=>`<div class="entry"><b>${esc(x.pool)}</b> · ${f(x.gallons)} GAL${all().some(p=>p.id===x.poolId)?'':' · DELETED / LEGACY POOL'}<p>${esc(x.date)} ${esc(x.time||'')} · ${esc(x.mode)}</p><p>${Object.entries(x.readings||{}).map(([k,v])=>esc(k)+': '+esc(v)).join(' · ')}</p><p>${x.initials?'Initials: '+esc(x.initials)+'<br>':''}${esc(x.note||'')}</p></div>`).join(''):'<p>No saved records in this scope.</p>'}
-function clearHistory(){const scope=$('historyScope').value;if(!confirm(scope==='all'?'Delete ALL history and daily/weekly logs, including deleted pools?':'Delete all history and daily/weekly logs for '+(cur()?.n||'the selected pool')+'?'))return;const keep=x=>scope!=='all'&&x.poolId!==cur()?.id;HISTORY=HISTORY.filter(keep);DAILY=DAILY.filter(keep);WEEKLY=WEEKLY.filter(keep);persist('chemHistory',HISTORY);persist('dailyChemLog',DAILY);persist('weeklyChemLog',WEEKLY);renderHistory()}
 function csvCell(v){let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"'}
 function downloadCSV(rows,name){const url=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function exportLog(type){const data=(type==='daily'?DAILY:WEEKLY).filter(x=>x.poolId===cur()?.id);downloadCSV([['Date','Time','Pool ID','Pool','Gallons',...fields[type].map(x=>x[1]),'Initials','Notes'],...data.map(x=>[x.date,x.time,x.poolId,x.pool,x.gallons,...fields[type].map(([k])=>x[k]),x.initials,x.notes])],type+'-water-chemistry-log.csv')}
 function exportHistory(){downloadCSV([['Date','Time','Mode','Pool ID','Pool','Gallons','Calcium','TA','pH','Bromine','Temperature','Initials','Notes'],...scopedRecords().map(x=>[x.date,x.time,x.mode,x.poolId,x.pool,x.gallons,x.readings?.Calcium,x.readings?.TA,x.readings?.pH,x.readings?.Bromine,x.readings?.Temperature,x.initials,x.note])],'water-chemistry-history.csv')}
 // Initialize after all declarations, including log field definitions.
-$('ref').insertAdjacentHTML('beforeend',`<div class="card"><h3>Dosing procedure</h3><div class="workflow">${FLOW}</div><p>TA increase or decrease: maximum calculated change of 30 ppm per treatment for every pool. High TA: apply half the calculated correction first, then cap the resulting change at 30 ppm. A current pH reading above 7.2 is required to display a TA-decrease amount; this check alone does not prove that the dose is safe. Product-label restrictions and applicable daily limits take precedence. pH correction: half the Taylor demand dose. ADD NOW includes reductions and caps.</p>${taCaution}${bromineWarning}</div><div class="card"><h3>Complete Taylor Test Kit Troubleshooting Guide</h3><a href="Taylor-Troubleshooting.pdf" target="_blank" rel="noopener">Open original complete guide (PDF)</a>${[2,1,3,4,5].map(i=>'<h4>'+({1:'Calcium Hardness',2:'Total Alkalinity',3:'pH',4:'Chlorine (DPD)',5:'CYA'}[i])+'</h4><ul>'+tips[i].map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>').join('')}</div>`);
+$('ref').insertAdjacentHTML('beforeend',`<div class="card"><h3>Dosing procedure</h3><div class="workflow">${FLOW}</div><p>TA increase or decrease: maximum calculated change of 30 ppm per treatment for every pool. High TA: apply half the calculated correction first, then cap the resulting change at 30 ppm. A current pH reading above 7.2 is required to display a TA-decrease amount; this check alone does not prove that the dose is safe. Product-label restrictions and applicable daily limits take precedence. pH correction: half the Taylor demand dose. ADD NOW includes reductions and caps.</p>${taCaution}${bromineWarning}</div><div class="card"><h3>Complete Taylor Test Kit Troubleshooting Guide</h3><a href="../Taylor-Troubleshooting.pdf" target="_blank" rel="noopener">Open original complete guide (PDF)</a>${[2,1,3,4,5].map(i=>'<h4>'+({1:'Calcium Hardness',2:'Total Alkalinity',3:'pH',4:'Chlorine (DPD)',5:'CYA'}[i])+'</h4><ul>'+tips[i].map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>').join('')}</div>`);
 
-render();show('home');if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>notify('Offline cache unavailable; the app can still run online.'));
+render();show('home');

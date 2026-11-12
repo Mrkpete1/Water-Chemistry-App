@@ -1,22 +1,3 @@
-// Bundled resources are served with the app; no external sharing account is needed.
-const RISE_RESOURCES=[
- {title:'RISE Overview',file:'the-rise.mp4',kind:'video'},
- {title:'RISE Controls',file:'rise-controls.mp4',kind:'video'},
- {title:'Badu Jet & Massage Hose',file:'badu-jet-massage-hose.mp4',kind:'video'},
- {title:'How Water Works',file:'how-water-works.pdf',kind:'pdf'},
- {title:'RISE Water Maintenance Record Logs',file:'water-maintenance-record-logs.pdf',kind:'pdf'},
- {title:'Daily Water Chemistry Log',file:'daily-water-chemistry-log.docx',kind:'word'},
- {title:'Pool Maintenance Schedule',file:'pool-maintenance-schedule.docx',kind:'word'},
- {title:'Helpful Unit Items',file:'helpful-unit-items.docx',kind:'word'}
-];
-function bundledPoolResources(model){
- if(manualModelKey(model)!=='RISE')return '';
- const card=r=>{
-  const url=new URL('resources/rise/'+r.file,document.baseURI).href;
-  return '<section class="rise-resource"><h5>'+esc(r.title)+'</h5>'+(r.kind==='video'?'<video class="video" controls playsinline preload="none" aria-label="'+esc(r.title)+'"><source src="'+esc(url)+'" type="video/mp4">Your browser cannot play this video. Use the download button below.</video>':r.kind==='pdf'?'<p><a class="secondary" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open PDF</a></p>':'<p class="muted">Editable Word document. Download and open in Word or another compatible app.</p>')+'<p><a class="secondary" href="'+esc(url)+'" download="'+esc(r.file)+'">Download '+(r.kind==='video'?'Video':r.kind==='pdf'?'PDF':'Word Document')+'</a></p></section>';
- };
- return '<section id="riseCustomerResources" class="card"><h4>RISE Customer Resources</h4><p>Watch the videos or download the documents below.</p><details open><summary>Videos</summary>'+RISE_RESOURCES.filter(r=>r.kind==='video').map(card).join('')+'</details><details open><summary>Guides & Logs</summary>'+RISE_RESOURCES.filter(r=>r.kind!=='video').map(card).join('')+'</details></section>';
-}
 const resourcesEditor=document.createElement('div');resourcesEditor.id='resourcesEditor';
 $('setupChoices').after(resourcesEditor);
 function renderResourceEditor(){
@@ -48,7 +29,7 @@ $('home').append(customerResourcesCard);
 function renderCustomerResources(){
  customerResourcesCard.replaceChildren();customerResourcesCard.classList.add('hidden');
  const selected=cur();if(!selected)return;
- let setup=null;try{setup=JSON.parse(localStorage.getItem('customerSetupV535')||'null')}catch(e){}
+ let setup=null;try{setup=JSON.parse(appStorage.getItem('customerSetupV535')||'null')}catch(e){}
  // Original setup model survives local pool renames and custom gallon changes.
  const source=setup?.pools?.find(p=>setup.poolIds?.[keyPool(p)]===selected.id)||setup?.pools?.find(p=>keyPool(p)===keyPool(selected));
  const model=source?.n || PRESET_CATALOG.find(p=>p.id===selected.id)?.n || selected.n;
@@ -58,7 +39,7 @@ function renderCustomerResources(){
  if(!manualForModel(model) && r.manuals.length){
   manualCards=r.manuals.map(m=>'<section class="manual-download-card"><h4>'+esc(m.title)+'</h4>'+ownerManualNotice+'<a target="_blank" rel="noopener noreferrer" href="'+esc(m.url)+'">View / Download Owner’s Manual</a></section>').join('');
  }
- customerResourcesCard.innerHTML='<h3>Your Pool Resources</h3><p><b>'+esc(selected.n)+'</b></p>'+manualCards+bundledPoolResources(model)+compactPoolCare(model)+(r.tips?'<h4>Tips & Tricks</h4><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(r.tips)+'</p>':'')+(r.notes?'<h4>Operating Notes</h4><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(r.notes)+'</p>':'');
+ customerResourcesCard.innerHTML='<h3>Your Pool Resources</h3><p><b>'+esc(selected.n)+'</b></p>'+manualCards+compactPoolCare(model)+(r.tips?'<h4>Tips & Tricks</h4><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(r.tips)+'</p>':'')+(r.notes?'<h4>Operating Notes</h4><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(r.notes)+'</p>':'');
  customerResourcesCard.classList.remove('hidden');
 }
 const renderBeforeResources=render;render=function(){renderBeforeResources();renderCustomerResources()};

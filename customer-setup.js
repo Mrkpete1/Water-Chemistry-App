@@ -11,17 +11,18 @@ function decodeCustomerSetup(hash){
 function applyCustomerSetup(){
  try{
   const setup=decodeCustomerSetup(location.hash);if(!setup)return;
-  if(localStorage.getItem('customerSetupV535'))return;
+  if(appStorage.getItem('customerSetupV535'))return;
   // Never replace customized standard templates on an already configured device.
-  if(localStorage.getItem('standardPoolsV52')!==null){notify('This browser already has configured presets. Existing pools and logs were kept. Open the setup link in a new browser profile or device to use it.');return}
+  if(appStorage.getItem('standardPoolsV52')!==null){notify('This browser already has configured presets. Existing pools and logs were kept. Open the setup link in a new browser profile or device to use it.');return}
   const next=setup.pools.map((p,i)=>({...p,id:'customer-'+crypto.randomUUID(),p:1,facility:setup.facility}));
-  persist('standardPoolsV52',next);localStorage.setItem('customerSetupV535',JSON.stringify(setup));
-  P=next;sid='';localStorage.removeItem('sid');render();
+  persist('standardPoolsV52',next);appStorage.setItem('customerSetupV535',JSON.stringify(setup));
+  P=next;sid='';appStorage.removeItem('sid');render();
   notify('Customer presets loaded'+(setup.facility?' for '+setup.facility:'')+'. Select a pool to begin.');
  }catch(e){notify('Customer setup could not be loaded. Existing pools were kept.')}
 }
 const setupCard=document.createElement('div');setupCard.className='card';
 setupCard.innerHTML='<h3>Create Customer Setup Link</h3><p>Select the systems this customer owns. The link installs these presets on an unconfigured browser. Existing custom pools and logs stay on that device.</p><button class="secondary" id="setupUnlock">Unlock Setup Tool</button><div id="setupOwner" class="hidden"><label for="setupFacility">Facility name (optional)</label><input id="setupFacility" maxlength="120"><div id="setupChoices"></div><button id="makeSetupLink">Create Link</button><div id="setupOutput" class="hidden"><label for="setupLink">Customer link</label><textarea id="setupLink" readonly rows="4"></textarea><button class="secondary" id="copySetupLink">Copy Link</button><p>Send this link to the customer. Anyone with it can read the facility name and presets. It does not share logs or sync devices.</p></div></div>';
+setupCard.hidden = true;
 $('manage').appendChild(setupCard);
 let setupChoices=[];
 function renderSetupTool(){

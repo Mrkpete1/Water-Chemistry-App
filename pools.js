@@ -1,7 +1,7 @@
 let templatesUnlocked=false,editingTemplate=false;
 const sortedPools=rows=>[...rows].sort((a,b)=>a.n.localeCompare(b.n,'en',{numeric:true,sensitivity:'base'})||a.id.localeCompare(b.id));
 function render(){
- const rows=all();if(sid&&!rows.some(p=>p.id===sid)){sid='';localStorage.removeItem('sid')}
+ const rows=all();if(sid&&!rows.some(p=>p.id===sid)){sid='';appStorage.removeItem('sid')}
  $('pool').innerHTML=rows.length?`<option value="" ${sid?'':'selected'} disabled>Select a pool/system</option>`+rows.map(x=>`<option value="${esc(x.id)}" ${x.id===sid?'selected':''}>${esc(x.n)} — ${f(x.g)} GAL</option>`).join(''):'<option>No pools — add one in Manage Pools</option>';
  $('pool').disabled=!rows.length;$('hdr').textContent=sid&&cur()?`${cur().n} • ${f(cur().g)} GAL`:'';
  $('plist').innerHTML=C.length?sortedPools(C).map(x=>{const i=C.indexOf(x);return `<p><b>${esc(x.n)}</b> — ${f(x.g)} GAL${x.facility?'<br>'+esc(x.facility):''}<button class="secondary" onclick="editPool(${i})">Edit</button><button class="secondary" onclick="del(${i})">Delete</button></p>`}).join(''):'<p>No saved pools yet.</p>';
@@ -29,4 +29,4 @@ async function submitPassword(event){event.preventDefault();$('passwordSubmit').
  if(await passwordDigest($('templatePass').value,TEMPLATE_AUTH.salt)!==TEMPLATE_AUTH.hash)throw new Error('Incorrect password.');
  templatesUnlocked=true;$('passwordDialog').close();$('templatePass').value='';render();notify('Templates unlocked. Lock when finished.');
  }catch(e){$('passwordError').textContent=e.message||'Unable to verify password.'}finally{$('passwordSubmit').disabled=false}}
-window.addEventListener('storage',e=>{if(e.key==='standardPoolsV52'){P=localStorage.getItem('standardPoolsV52')===null?DEFAULT_P.map(x=>({...x})):readStore('standardPoolsV52');lockTemplates()}});
+window.addEventListener('storage',e=>{if(e.key==='standardPoolsV52'){P=appStorage.getItem('standardPoolsV52')===null?DEFAULT_P.map(x=>({...x})):readStore('standardPoolsV52');lockTemplates()}});

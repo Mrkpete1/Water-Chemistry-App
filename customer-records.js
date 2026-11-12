@@ -14,7 +14,7 @@ decodeCustomerSetup=function(hash){
 window.removeEventListener('hashchange',applyCustomerSetup);
 applyCustomerSetup=function(){try{
  const s=decodeCustomerSetup(location.hash);if(!s)return;
- const old=JSON.parse(localStorage.getItem('customerSetupV535')||'null');
+ const old=JSON.parse(appStorage.getItem('customerSetupV535')||'null');
  if(old){
   if(s.v!==2||(old.id?s.id!==old.id:s.legacy!==keyLegacy(old))){return}
   if(old.id&&s.rev<=(old.rev||1))return;
@@ -22,8 +22,8 @@ applyCustomerSetup=function(){try{
   for(const p of s.pools){const key=keyPool(p);if(seen.has(key))continue;seen.add(key);if([...next,...C].some(x=>keyPool(x)===key))continue;next.push({...p,id:'customer-'+crypto.randomUUID(),p:1,facility:s.facility});count++}
   persist('standardPoolsV52',next);persist('customerSetupV535',{...s,seen:[...seen],poolIds:{...Object.fromEntries(next.map(p=>[keyPool(p),p.id])),...(old.poolIds||{})}});P=next;render();notify(count+' new pool preset(s) added. Existing pools and logs kept.');return;
  }
- if(localStorage.getItem('standardPoolsV52')!==null){notify('Existing presets kept. Use a separate browser profile for this customer setup.');return}
- const next=s.pools.map(p=>({...p,id:'customer-'+crypto.randomUUID(),p:1,facility:s.facility}));persist('standardPoolsV52',next);persist('customerSetupV535',{...s,seen:s.pools.map(keyPool),poolIds:Object.fromEntries(next.map(p=>[keyPool(p),p.id]))});P=next;sid='';localStorage.removeItem('sid');render();notify('Customer presets loaded. Select a pool to begin.');
+ if(appStorage.getItem('standardPoolsV52')!==null){notify('Existing presets kept. Use a separate browser profile for this customer setup.');return}
+ const next=s.pools.map(p=>({...p,id:'customer-'+crypto.randomUUID(),p:1,facility:s.facility}));persist('standardPoolsV52',next);persist('customerSetupV535',{...s,seen:s.pools.map(keyPool),poolIds:Object.fromEntries(next.map(p=>[keyPool(p),p.id]))});P=next;sid='';appStorage.removeItem('sid');render();notify('Customer presets loaded. Select a pool to begin.');
 }catch(e){notify('Setup could not be loaded. Existing pools were kept.')}};
 function recordURL(s){const u=new URL(location.href);u.hash='';u.search='';u.hash=new URLSearchParams({setup:JSON.stringify(s)}).toString();return u.href}
 $('setupOwner').insertAdjacentHTML('beforeend','<h3>Saved Customer Links</h3><p>Records stay in this browser. Export a backup regularly. Updated links add pools; send the new link to the customer. Old links do not change automatically.</p><div id="customerRecords"></div><button class="secondary" id="newCustomerRecord">New Customer</button><button class="secondary" id="exportCustomerRecords">Export Links Backup</button><label>Restore links backup<input type="file" id="restoreCustomerRecords" accept=".json"></label><label for="importCustomerLink">Previously created customer link</label><textarea id="importCustomerLink"></textarea><button class="secondary" id="saveOldCustomerLink">Save Existing Link</button>');
@@ -44,9 +44,9 @@ facilityCard.id='facilityCard';facilityCard.className='card hidden';
 facilityCard.innerHTML='<p class="muted">FACILITY</p><h2 id="facilityName" style="overflow-wrap:anywhere;margin:0"></h2>';
 $('home').prepend(facilityCard);
 function renderFacilityName(){
- let name='';try{const setup=JSON.parse(localStorage.getItem('customerSetupV535')||'null');if(typeof setup?.facility==='string')name=setup.facility.trim()}catch(e){}
+ let name='';try{const setup=JSON.parse(appStorage.getItem('customerSetupV535')||'null');if(typeof setup?.facility==='string')name=setup.facility.trim()}catch(e){}
  $('facilityName').textContent=name;facilityCard.classList.toggle('hidden',!name);
 }
 const renderBeforeFacility=render;render=function(){renderBeforeFacility();renderFacilityName()};
 window.addEventListener('storage',e=>{if(e.key==='customerSetupV535'||e.key===null)renderFacilityName()});
-applyCustomerSetup();renderSetupTool();renderFacilityName();window.addEventListener('hashchange',applyCustomerSetup);
+renderSetupTool();renderFacilityName();
