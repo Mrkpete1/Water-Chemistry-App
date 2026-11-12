@@ -1,0 +1,1 @@
+Request a fresh GitHub Pages deployment of the existing RISE resource repair. No application settings or customer data are changed.
