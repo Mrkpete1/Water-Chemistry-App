@@ -1,0 +1,14 @@
+VIDEO PLAYBACK AND SHOCK DOSING UPDATE
+
+Replace the existing app files with the contents of this project folder, preserving the videos folder beside index.html. This ZIP contains the complete supplied project with the fixes applied. Publish through your existing GitHub deployment process, then reload the app.
+
+Changes:
+- Fixed video paths in both the video library and test-help popups. All four MP4s are included.
+- Default dichlor rate is 1 lb per 10,000 gallons (one 1 lb bag). Product and rate remain editable under Change product / dose rate.
+- Dry shock results display ounces by weight. Liquid products retain their liquid units.
+- Product-label confirmation, water checks, saved custom profiles and history remain available.
+- Updated the offline cache version.
+
+Validation: JavaScript syntax; seven pool volumes; custom rates; bag conversion; liquid units; invalid inputs; default setup; calculation; stale-result clearing; label-confirmation gate; all video file paths.
+
+Live sign-in, deployed browser playback and physical iPhone/iPad playback have not been tested. After publishing, check both Test Instruction Videos and How to Test buttons. The supplied videos were not re-encoded.
