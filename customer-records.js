@@ -49,4 +49,15 @@ function renderFacilityName(){
 }
 const renderBeforeFacility=render;render=function(){renderBeforeFacility();renderFacilityName()};
 window.addEventListener('storage',e=>{if(e.key==='customerSetupV535'||e.key===null)renderFacilityName()});
+$('makeSetupLink').insertAdjacentHTML('afterend','<button type="button" class="secondary" id="copyFirebaseSetup">Copy Firebase Setup</button><div id="firebaseSetupOutput" class="hidden"><p>For cloud sync: paste this string into the setup field of the facility document matching the customer Authentication UID. For existing facilities, retain existing pool IDs to preserve history.</p><textarea id="firebaseSetupText" readonly rows="5"></textarea></div>');
+$('copyFirebaseSetup').onclick=async()=>{
+ if(!templatesUnlocked)return;
+ const name=$('setupFacility').value.trim().toUpperCase();
+ const chosen=[...$('setupChoices').querySelectorAll('input:checked')].map(c=>setupChoices[Number(c.value)]);
+ if(!name||!chosen.length||chosen.length>30)return notify('Enter a facility name and choose 1 to 30 pools.');
+ const used=new Set();const pools=chosen.map(p=>{const base=p.n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)||'pool';let id=base,i=2;while(used.has(id))id=base+'-'+i++;used.add(id);return {id,n:p.n,g:p.g}});
+ const value=JSON.stringify({name,pools});$('firebaseSetupText').value=value;$('firebaseSetupOutput').classList.remove('hidden');
+ try{await navigator.clipboard.writeText(value);notify('Firebase setup copied.');}catch(e){$('firebaseSetupText').focus();$('firebaseSetupText').select();notify('Select and copy the Firebase setup string.');}
+};
+const renderBeforeFirebaseSetup=renderSetupTool;renderSetupTool=function(){renderBeforeFirebaseSetup();$('firebaseSetupOutput').classList.add('hidden');$('firebaseSetupText').value='';if(templatesUnlocked&&!editingRecord)$('makeSetupLink').textContent='Create Standalone Customer Link';};
 renderSetupTool();renderFacilityName();
