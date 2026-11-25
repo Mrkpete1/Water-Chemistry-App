@@ -27,7 +27,7 @@ body:not(.facility-open) > :is(header,main,nav,#notice,.modal,dialog){display:no
  <button id="facilityCancelSession" type="button" class="secondary" hidden>Sign out</button>
  </div>
 </section>
-<header><div id="facilityStatusBar"><strong id="facilityBannerName"></strong><span id="facilitySyncStatus" role="status"></span><button id="facilitySignOut" type="button" class="secondary">Sign out</button></div><h2>Mark's Water Chemistry Assistant · V5.6.1</h2><div id="hdr"></div></header><main>
+<header><div id="facilityStatusBar"><strong id="facilityBannerName"></strong><span id="facilitySyncStatus" role="status"></span><button id="facilitySignOut" type="button" class="secondary">Sign out</button></div><h2>Mark's Water Chemistry Assistant · V5.6.2</h2><div id="hdr"></div></header><main>
 <section id="home"><div class="card"><h3>Pool / System</h3><select id="pool"></select></div><div class="card"><h3>What are you doing today?</h3><button onclick="fresh()">Fresh Fill / Refill</button><button onclick="routine()">Routine Water Test</button><button onclick="openShock('weekly')">Weekly / As-needed Shock</button><button onclick="show('logs')">Daily & Weekly Logs</button><button id="homeManualButton" class="secondary" type="button" onclick="openSelectedPoolManual()">📘 OWNER'S MANUAL</button><button onclick="show('videos')">Test Instruction Videos</button><button class="secondary" onclick="show('ref')">Chemistry Reference</button></div></section>
 <section id="manage" class="hidden"><div class="card"><h3 id="poolFormTitle">Add Pool</h3><label for="pn">Pool / system name</label><input id="pn"><label for="pf">Facility / customer (optional)</label><input id="pf"><label for="pg">Volume (gallons)</label><input id="pg" type="number" min="1"><button onclick="addPool()">Save Pool</button><button class="secondary" onclick="cancelEdit()">Cancel Edit</button></div><div class="card"><h3>Saved Pools</h3><div id="plist"></div></div><div class="card"><h3>Standard HydroWorx Systems</h3><p id="templateStatus">Templates locked.</p><p class="muted">Owner controls for this browser. Changes apply on this device and preserve existing history.</p><button id="unlockTemplates" class="secondary" onclick="openPassword()">Unlock Templates</button><button id="lockTemplates" class="secondary hidden" onclick="lockTemplates()">Lock Templates</button><div id="standards"></div></div></section>
 <section id="fresh" class="hidden"><div class="card"><h3>Fresh Fill / Refill</h3><b>Calcium → Alkalinity → pH → Initial Shock & Bromine Startup</b><p class="muted">Complete each step and retest before continuing.</p></div><div id="steps"></div></section>
@@ -73,5 +73,5 @@ stainless-care.js
 lsi.js
 maintenance-tracker.js
 cleaning-schedule.js
-equipment-profile.js</script><script type="module" src="facility-bootstrap.js?v=5.6.1"></script></body></html>
+equipment-profile.js</script><script type="module" src="facility-bootstrap.js"></script></body></html>
 

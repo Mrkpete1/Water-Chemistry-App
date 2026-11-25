@@ -24,11 +24,21 @@ const setupCard=document.createElement('div');setupCard.className='card';
 setupCard.innerHTML='<h3>Create Customer Setup Link</h3><p>Select the systems this customer owns. The link installs these presets on an unconfigured browser. Existing custom pools and logs stay on that device.</p><button class="secondary" id="setupUnlock">Unlock Setup Tool</button><div id="setupOwner" class="hidden"><label for="setupFacility">Facility name (optional)</label><input id="setupFacility" maxlength="120"><div id="setupChoices"></div><button id="makeSetupLink">Create Link</button><div id="setupOutput" class="hidden"><label for="setupLink">Customer link</label><textarea id="setupLink" readonly rows="4"></textarea><button class="secondary" id="copySetupLink">Copy Link</button><p>Send this link to the customer. Anyone with it can read the facility name and presets. It does not share logs or sync devices.</p></div></div>';
 setupCard.hidden = true;
 $('manage').appendChild(setupCard);
+if(window.localMode){
+ setupCard.hidden=false;
+ setupCard.className='card';
+ setupCard.innerHTML=setupCard.innerHTML.replace('<h3>Create Customer Setup Link</h3>','<h3>Administrator Setup</h3>').replace('Unlock Setup Tool','Unlock Administrator Setup');
+ $('ref').appendChild(setupCard);
+ const lock=document.createElement('button');lock.id='setupLock';lock.className='secondary hidden';lock.textContent='Lock Administrator Setup';lock.onclick=()=>lockTemplates();setupCard.appendChild(lock);
+}
+function adminSetupChoices(){const rows=[...all()];for(const p of DEFAULT_P)if(!rows.some(x=>x.n===p.n&&x.g===p.g))rows.push(p);return sortedPools(rows);}
+
 let setupChoices=[];
 function renderSetupTool(){
+ if($('setupLock'))$('setupLock').classList.toggle('hidden',!templatesUnlocked);
  $('setupOwner').classList.toggle('hidden',!templatesUnlocked);$('setupUnlock').classList.toggle('hidden',templatesUnlocked);
  if(!templatesUnlocked){$('setupOutput').classList.add('hidden');$('setupLink').value='';return}
- setupChoices=all();$('setupChoices').innerHTML=setupChoices.map((p,i)=>'<label class="check"><input type="checkbox" value="'+i+'"> '+esc(p.n)+' — '+f(p.g)+' GAL</label>').join('');
+ setupChoices=adminSetupChoices();$('setupChoices').innerHTML=setupChoices.map((p,i)=>'<label class="check"><input type="checkbox" value="'+i+'"> '+esc(p.n)+' — '+f(p.g)+' GAL</label>').join('');
 }
 const renderBeforeSetup=render;render=function(){renderBeforeSetup();renderSetupTool()};
 $('setupUnlock').onclick=()=>openPassword();
