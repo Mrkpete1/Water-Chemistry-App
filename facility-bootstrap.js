@@ -240,15 +240,12 @@ const choices = document.querySelector('#modeChoices');
 function modeURL(mode) {
   const url = new URL(location.href);
   url.searchParams.delete('local'); url.searchParams.delete('facility');
-  url.searchParams.delete('workspace'); url.hash = '';
   if (mode) url.searchParams.set(mode, '1');
   return url;
 }
 async function startLocal() {
   window.localMode = true;
-  const workspace = params.get('workspace');
-  const prefix = workspace && /^[a-f0-9-]{36}$/.test(workspace) ? 'waterChemistryLocal:'+workspace+':' : '';
-  window.facilityStorage = prefix ? {getItem:k=>localStorage.getItem(prefix+k),setItem:(k,v)=>localStorage.setItem(prefix+k,v),removeItem:k=>localStorage.removeItem(prefix+k)} : localStorage;
+  window.facilityStorage = localStorage;
   const keys = {history:'history', daily:'dailyLogs', weekly:'weeklyLogs'};
   const read = () => Object.fromEntries(Object.entries(keys).map(([kind,key]) => [kind,readStore(key)]));
   window.facilityLogs = {async append(kind, record) {
@@ -264,19 +261,6 @@ async function startLocal() {
   if (new URLSearchParams(location.hash.slice(1)).has('setup')) applyCustomerSetup();
   replaceFacilityHistory(read());
   document.querySelector('#facilityBannerName').textContent = 'Standalone mode';
-  const registryKey = 'waterChemistryLocalWorkspaces';
-  const readRegistry = () => JSON.parse(localStorage.getItem(registryKey)||'[]');
-  const card = document.createElement('div'); card.className='card';
-  card.innerHTML='<h3>Facility &amp; Pool Management</h3><label for="localWorkspace">Saved facilities</label><select id="localWorkspace"></select><button id="localOpen" class="secondary">Open Facility</button><button id="localCreate">Create Facility</button><button id="localManage" class="secondary">Manage Pools</button>';
-  document.querySelector('#home').prepend(card);
-  const select = card.querySelector('select');
-  const existing = document.createElement('option'); existing.value=''; existing.textContent='Original local workspace (existing records)'; select.append(existing);
-  for(const item of readRegistry()){const option=document.createElement('option');option.value=item.id;option.textContent=item.name;select.append(option);}
-  select.value=prefix?workspace:'';
-  const openWorkspace = id => {const url=modeURL('local');if(id)url.searchParams.set('workspace',id);location.assign(url);};
-  card.querySelector('#localOpen').onclick=()=>openWorkspace(select.value);
-  card.querySelector('#localCreate').onclick=()=>{const name=prompt('Enter the new facility name');if(!name?.trim())return;const id=crypto.randomUUID(), title=name.trim().toUpperCase().slice(0,120);try{localStorage.setItem('waterChemistryLocal:'+id+':customerSetupV535',JSON.stringify({facility:title,pools:[]}));localStorage.setItem('waterChemistryLocal:'+id+':standardPoolsV52','[]');localStorage.setItem(registryKey,JSON.stringify([...readRegistry(),{id,name:title}]));openWorkspace(id);}catch{alert('Unable to save facility. Check browser storage.');}};
-  card.querySelector('#localManage').onclick=()=>{show('manage');if(prefix){const setup=JSON.parse(appStorage.getItem('customerSetupV535')||'{}');$('pf').value=setup.facility||'';}};
   syncStatus.textContent = 'Saved on this browser only';
   signOutButton.textContent = 'Switch mode';
   signOutButton.onclick = () => location.assign(modeURL(''));
