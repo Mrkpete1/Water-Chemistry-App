@@ -235,7 +235,47 @@ async function start() {
   });
 }
 
-start().catch(() => {
-  status.textContent = 'Could not connect to sign-in. Check your connection and reload.';
-  retryButton.hidden = false;
-});
+const params = new URLSearchParams(location.search);
+const choices = document.querySelector('#modeChoices');
+function modeURL(mode) {
+  const url = new URL(location.href);
+  url.searchParams.delete('local'); url.searchParams.delete('facility');
+  if (mode) url.searchParams.set(mode, '1');
+  return url;
+}
+async function startLocal() {
+  window.localMode = true;
+  window.facilityStorage = localStorage;
+  const keys = {history:'history', daily:'dailyLogs', weekly:'weeklyLogs'};
+  const read = () => Object.fromEntries(Object.entries(keys).map(([kind,key]) => [kind,readStore(key)]));
+  window.facilityLogs = {async append(kind, record) {
+    try {
+      if (!Object.hasOwn(keys,kind)) return false;
+      const rows = readStore(keys[kind]);
+      persist(keys[kind], [record,...rows]);
+      replaceFacilityHistory(read());
+      return true;
+    } catch { return false; }
+  }};
+  for (const script of document.querySelector('#facilityAppScripts').textContent.trim().split(/\s+/)) await loadScript(script);
+  if (new URLSearchParams(location.hash.slice(1)).has('setup')) applyCustomerSetup();
+  replaceFacilityHistory(read());
+  document.querySelector('#facilityBannerName').textContent = 'Standalone mode';
+  syncStatus.textContent = 'Saved on this browser only';
+  signOutButton.textContent = 'Switch mode';
+  signOutButton.onclick = () => location.assign(modeURL(''));
+  panel.hidden = true;
+  document.body.classList.add('facility-open');
+}
+function launch(fn) {
+  choices.hidden = true;
+  status.textContent = 'Loading…';
+  fn().catch(() => { status.textContent = 'Could not open the app. Check your connection or browser storage and reload.'; retryButton.hidden = false; retryButton.onclick = () => location.reload(); });
+}
+document.querySelector('#chooseLocal').onclick = () => location.assign(modeURL('local'));
+document.querySelector('#chooseFacility').onclick = () => location.assign(modeURL('facility'));
+if (params.get('local') === '1' || (!params.has('facility') && new URLSearchParams(location.hash.slice(1)).has('setup'))) launch(startLocal);
+else if (params.get('facility') === '1') {
+  const back = document.createElement('button'); back.textContent = 'Back to access options'; back.className = 'secondary'; back.onclick = () => location.assign(modeURL('')); panel.querySelector('.card').append(back);
+  launch(start);
+}

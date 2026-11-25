@@ -102,7 +102,7 @@ async function recordShock(){
   return;
  }
  if (shockCalculated !== s || $('recordShock') !== button) {
-  notify('Addition saved to shared history.');
+  notify(window.localMode ? 'Addition saved on this device.' : 'Addition saved to shared history.');
   return;
  }
  shockRecorded = true;

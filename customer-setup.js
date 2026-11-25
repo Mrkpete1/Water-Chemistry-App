@@ -37,7 +37,7 @@ $('makeSetupLink').onclick=()=>{
  const pools=[...$('setupChoices').querySelectorAll('input:checked')].map(c=>{const p=setupChoices[Number(c.value)];return {n:p.n,g:p.g}});
  if(!pools.length)return notify('Select at least one pool/system.');
  if(pools.length>30)return notify('Choose at most 30 pools for one link.');
- const url=new URL(location.href);url.hash='';url.search='';url.hash=new URLSearchParams({setup:JSON.stringify({v:1,facility:$('setupFacility').value.trim(),pools})}).toString();
+ const url=new URL(location.href);url.hash='';url.search='?local=1';url.hash=new URLSearchParams({setup:JSON.stringify({v:1,facility:$('setupFacility').value.trim(),pools})}).toString();
  $('setupLink').value=url.href;$('setupOutput').classList.remove('hidden');
 };
 $('copySetupLink').onclick=async()=>{if(!templatesUnlocked)return;try{await navigator.clipboard.writeText($('setupLink').value);notify('Customer link copied.')}catch(e){$('setupLink').focus();$('setupLink').select();notify('Select and copy the customer link.')}};

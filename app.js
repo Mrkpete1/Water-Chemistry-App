@@ -58,7 +58,7 @@ function routine(){if(!cur()){show('home');notify('Select a facility pool first.
 function routineChanged(){setDemand(value('rp'),'routineDemand','rd');$('rr').innerHTML=''}
 function routineResults(){const ids=['rc','rt','rp','rb'],g=cur().g;let a=[];for(let i=0;i<4;i++){const v=value(ids[i]);if(v===null)continue;if(!valid(v,i===2)){alert('Enter valid nonnegative readings; pH must be 0–14.');return null}a.push([labels[i],i===0?ca(v,g):i===1?ta(v,g,value('rp')):i===2?ph(v,g,+$('rd').value):br(v,g,$('rprod').value)])}return a}
 function calcRoutine(){const a=routineResults();if(!a)return;const corrections=a.filter(([,r])=>!['IN RANGE','MINIMUM MET'].includes(r.status));$('rr').innerHTML=`<h3>${!a.length?'Enter at least one reading.':corrections.length?corrections.length+' reading(s) need attention.':'All entered readings meet targets.'}</h3><p>${a.length}/4 readings entered. ${a.length<4?'Untested values have not been assessed.':''}</p>${corrections.length?'<p>Make one adjustment at a time in Calcium → TA → pH → Bromine order. Retest before the next correction.</p>':''}`+corrections.map(([n,r])=>`<hr><h3>${n}</h3>${out(r)}`).join('')}
-async function saveRoutine(){const a=routineResults();if(!a||!a.length)return alert('Enter at least one valid reading.');let readings={};['rc','rt','rp','rb'].forEach((id,i)=>{if($(id).value!=='')readings[['Calcium','TA','pH','Bromine'][i]]=$(id).value});const r={id:uid(),poolId:cur().id,pool:cur().n,gallons:cur().g,date:new Date().toISOString(),mode:'Routine Test',readings,results:a,note:$('rnote').value};if (await window.facilityLogs.append('history', r)) notify('Water test saved to shared history.')}
+async function saveRoutine(){const a=routineResults();if(!a||!a.length)return alert('Enter at least one valid reading.');let readings={};['rc','rt','rp','rb'].forEach((id,i)=>{if($(id).value!=='')readings[['Calcium','TA','pH','Bromine'][i]]=$(id).value});const r={id:uid(),poolId:cur().id,pool:cur().n,gallons:cur().g,date:new Date().toISOString(),mode:'Routine Test',readings,results:a,note:$('rnote').value};if (await window.facilityLogs.append('history', r)) notify(window.localMode ? 'Water test saved on this device.' : 'Water test saved to shared history.')}
 function localDT(){const d=new Date(),z=n=>String(n).padStart(2,'0');return{date:`${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`,time:`${z(d.getHours())}:${z(d.getMinutes())}`}}
 const fields={daily:[['bromine','Bromine (ppm)'],['pH','pH'],['temp','Temperature (°F)']],weekly:[['ta','Total Alkalinity (ppm)'],['calcium','Calcium Hardness (ppm)']]};
 function renderDaily(){renderLog('daily')}function renderWeekly(){renderLog('weekly')}
@@ -105,7 +105,7 @@ async function saveLog() {
  try {
   if (await window.facilityLogs.append(type, r)) {
    if (page === 'logs' && $('logEntryCard') === form) renderLog(type);
-   notify('Reading saved to shared history.');
+   notify(window.localMode ? 'Reading saved on this device.' : 'Reading saved to shared history.');
   }
  } finally {
   controls.forEach(control => control.disabled = false);
