@@ -46,7 +46,7 @@ function saveEquipmentProfile(event){
  const profile={...equipmentProfile(),equipment:{},links:{...equipmentProfile().links}};
  for(const type of EQUIPMENT_TYPES){profile.equipment[type]={};for(const field of ['status','brand','model','serial','notes'])profile.equipment[type][field]=$('eq-'+type+'-'+field).value.trim()}
  equipmentSection.querySelectorAll('select[data-task]').forEach(select=>profile.links[select.dataset.task]=select.value);
- storeEquipmentProfile(profile);$('equipmentSaved').textContent='Equipment profile saved for '+cur().n+'.';
+ storeEquipmentProfile(profile);window.waterAppUpdates?.markSaved($('equipmentForm'));$('equipmentSaved').textContent='Equipment profile saved for '+cur().n+'.';
 }
 function editEquipmentTask(i){
  const t=equipmentProfile().tasks[i];if(!t)return;

@@ -1,0 +1,6 @@
+# Release integrity hashes require exact bytes on the hosting server.
+*.js -text
+*.css -text
+*.html -text
+*.json -text
+*.svg -text

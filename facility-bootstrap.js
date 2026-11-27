@@ -185,6 +185,7 @@ async function start() {
         }
       };
 
+      window.waterAppUpdates?.trackLogSaves(window.facilityLogs);
       const scripts = document.querySelector('#facilityAppScripts').textContent.trim().split(/\s+/);
       for (const script of scripts) await loadScript(script);
       if (auth.currentUser?.uid !== user.uid) return;
@@ -257,6 +258,7 @@ async function startLocal() {
       return true;
     } catch { return false; }
   }};
+  window.waterAppUpdates?.trackLogSaves(window.facilityLogs);
   for (const script of document.querySelector('#facilityAppScripts').textContent.trim().split(/\s+/)) await loadScript(script);
   if (new URLSearchParams(location.hash.slice(1)).has('setup')) applyCustomerSetup();
   replaceFacilityHistory(read());
